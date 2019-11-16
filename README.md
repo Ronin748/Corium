@@ -79,4 +79,9 @@ Button 2 ------ Jump
 Button 3 ------ Flame
 ```
 
+## Screenshots
 
+![crm_14](https://user-images.githubusercontent.com/12766039/68994706-c8796a80-088e-11ea-8349-1ef6f7214b66.png)
+![crm_4](https://user-images.githubusercontent.com/12766039/68994703-c8796a80-088e-11ea-8d34-a2222e7b245d.png)
+![crm_12](https://user-images.githubusercontent.com/12766039/68994704-c8796a80-088e-11ea-9ebb-a0a11dbc4b6a.png)
+![crm_13](https://user-images.githubusercontent.com/12766039/68994705-c8796a80-088e-11ea-8bb5-7d328f864fce.png)

@@ -1,6 +1,6 @@
 ===========================================================================
 --------------------- CORIUM ENGINE v1.40 BY RONINKOI ---------------------
---------------------------- 2019-09-18.23:06:36 ---------------------------
+--------------------------- 2019-11-10.20:25:40 ---------------------------
 ===========================================================================
 
 max vertices: 33000
@@ -41,6 +41,8 @@ Fragment info
 Vsync disabled!
 loading map maps/hurricos/hurricos.cm...
 running script maps/hurricos/hurricos.cl...
+running script backr.cl...
+1
 Running map scripts...
 loading maps/hurricos/hurricos.cfg...
 loading chunk 000
@@ -178,6 +180,3 @@ loading chunk 131
 loading chunk 132
 loading chunk 133
 loading chunk 134
-FPS: 1651, rt: 0.49788 ms, draws: 66, batches: 5, tt: 1.04545 ms
-lights: 3
-Player pos: 40, 10.3203, -30

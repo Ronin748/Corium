@@ -6,7 +6,7 @@
 Corium engine (CRM) v1.4.1, written in C++ using OpenGL,
 GLEW, GLFW, GLM, stb_image, pthreads
 
-Builds for Linux (Fedora 27) and Windows
+Builds for Linux and Windows
 
 Requires GLEW and GLFW to run
 
