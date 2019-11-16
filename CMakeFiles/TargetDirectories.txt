@@ -1,3 +1,0 @@
-/home/rak/Documents/Corium/CMakeFiles/rebuild_cache.dir
-/home/rak/Documents/Corium/CMakeFiles/Corium.dir
-/home/rak/Documents/Corium/CMakeFiles/edit_cache.dir
