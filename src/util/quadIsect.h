@@ -5,7 +5,7 @@
 #ifndef CORIUM_QUADISECT_H
 #define CORIUM_QUADISECT_H
 
-#include "crm.h"
+#include "corium.h"
 
 bool quadIsect(std::vector<float> q1, std::vector<float> q2)
 {

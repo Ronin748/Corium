@@ -1,9 +1,9 @@
 ==========================================================
 ------------------- CORIUM ENGINE v1.4 -------------------
------------------- Roninkoi  24.07.2018 ------------------
+------------------ Roninkoi  16.11.2019 ------------------
 ==========================================================
 
-Corium engine (CRM) v1.4.1, written in C++ using OpenGL,
+Corium engine v1.4.1, written in C++ using OpenGL,
 GLEW, GLFW, GLM, stb_image, pthreads
 
 Builds for Linux and Windows
@@ -22,7 +22,7 @@ Requires OpenGL 3.1, CPU with 4 cores optimal
 
 - dynamic multi-threaded physics
 
-- CRMLANG scripting
+- Coriumlang scripting
 
 - on-the-fly configuration
 

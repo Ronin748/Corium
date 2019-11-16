@@ -4,6 +4,6 @@ _CORIUM_SCRIPT;
 
 _BEGIN;
 	_SET_MAP "maps/hurricos/hurricos.cm";
-	#_SET_MAP "maps/cornell.cm";
 _END;
+
 

@@ -5,9 +5,6 @@
 #ifndef CORIUM_AUDIO_H
 #define CORIUM_AUDIO_H
 
-#include <AL/al.h>
-#include <AL/alc.h>
-
 class Audio {
 public:
 void playAudio()

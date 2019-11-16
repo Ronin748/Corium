@@ -8,7 +8,7 @@ void Sprite::tickAnim(float newTicks)
 {
         ticks = newTicks;
 
-        if (anim_ticks - ticks >= animSpd) {
+        if (animTicks - ticks >= animSpd) {
                 ++anim;
                 if (anim >= anim_cycle.size()) {
                         anim = 0;

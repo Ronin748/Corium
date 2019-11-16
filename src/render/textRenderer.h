@@ -5,7 +5,7 @@
 #ifndef CORIUM_TEXTRENDERER_H
 #define CORIUM_TEXTRENDERER_H
 
-#include "crm.h"
+#include "corium.h"
 #include "render/shader/shader.h"
 #include "quad.h"
 

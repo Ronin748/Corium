@@ -7,10 +7,10 @@
 
 #include <math.h>
 
-#include "crm.h"
+#include "corium.h"
 #include "quad.h"
 #include "render/renderer.h"
-#include "util/random.h"
+#include "util/randomUtil.h"
 #include "phys/sys.h"
 #include "game/obj/obj.h"
 #include "util/objParser.h"

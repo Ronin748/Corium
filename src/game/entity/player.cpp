@@ -194,7 +194,7 @@ void Player::collide(Sys *ps)
         clipMesh.objMatrix = glm::translate(clipMesh.objMatrix, phys.pos);
         clipMesh.objMatrix = glm::translate(clipMesh.objMatrix,
                                             glm::vec3(0.0f, -1.7f, 0.0f) + glm::vec3(0.0f, 0.0f, 0.0f));
-        clipMesh.objMatrix = glm::scale(clipMesh.objMatrix, glm::vec3(0.5f, 3.0f, 0.5f));
+        clipMesh.objMatrix = glm::scale(clipMesh.objMatrix, glm::vec3(0.5f, 3.2f, 0.5f));
 
         clipMesh.update();
 

@@ -5,7 +5,7 @@
 #ifndef CORIUM_PHYS_H
 #define CORIUM_PHYS_H
 
-#include "crm.h"
+#include "corium.h"
 
 const float PHYS_EPSILON = 0.005f;
 

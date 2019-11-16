@@ -5,7 +5,7 @@
 #ifndef CORIUM_SHADER_H
 #define CORIUM_SHADER_H
 
-#include "crm.h"
+#include "corium.h"
 //#include "shadersrc.h" // this causes errors
 
 class Shader {

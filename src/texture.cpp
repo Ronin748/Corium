@@ -5,7 +5,7 @@
 #include <texture.h>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "util/stb_image.h"
 
 unsigned char *loadGLTex(std::string p, int *w, int *h)
 {

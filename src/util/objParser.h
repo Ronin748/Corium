@@ -5,7 +5,7 @@
 #ifndef CORIUM_OBJPARSER_H
 #define CORIUM_OBJPARSER_H
 
-#include <crm.h>
+#include <corium.h>
 #include <mesh.h>
 
 Mesh loadObj(std::string path)

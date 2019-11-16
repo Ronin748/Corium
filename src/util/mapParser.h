@@ -1,5 +1,5 @@
 #include <game/world/map.h>
-#include "crmLexer.h"
+#include "lexer.h"
 
 void mapCmd(std::vector<std::string> words, int i, Map* map)
 {

@@ -3,7 +3,7 @@
 //
 
 #include "game.h"
-#include "util/time.h"
+#include "util/timeUtil.h"
 #include "util/cfgParser.h"
 
 Game::Game()
@@ -72,7 +72,7 @@ int Game::getTime()
         long long int et = std::chrono::duration_cast<std::chrono::milliseconds>
                                    (timer.now().time_since_epoch() - start_time).count();
 
-        int returns = (int)et;
+        int returns = (int) et;
 
         return returns;
 }
@@ -92,7 +92,9 @@ void Game::init()
 
         loadGameCfg();
 
-        if (fileoutput) outputfile = freopen("output.log", "w", stdout);
+        if (fileoutput) {
+                outputfile = freopen("output.log", "w", stdout);
+        }
 
         print("===========================================================================\n");
         print("--------------------- CORIUM ENGINE v1.40 BY RONINKOI ---------------------\n");
@@ -147,13 +149,13 @@ void Game::start()
 
         map.start(&renderer, &aud, &running);
 
-        wndw.update(&running); // correct window dimesions
+        wndw.update(&running); // correct window dimensions
 
         // update main renderer so screen renderer can initialize itself
         rendererUpdate();
 
         GLFWimage icons[1];
-        icons[0].pixels = loadGLTex("gfx/misc/CRM_logo.png", &icons[0].width, &icons[0].height);
+        icons[0].pixels = loadGLTex("gfx/misc/Corium_logo.png", &icons[0].width, &icons[0].height);
         glfwSetWindowIcon(wndw.window, 1, icons);
 
         // loading screen
@@ -203,5 +205,7 @@ void Game::gameQuit()
 
         glfwTerminate();
 
-        if (fileoutput) fclose(outputfile);
+        if (fileoutput) {
+                fclose(outputfile);
+        }
 }

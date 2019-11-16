@@ -5,7 +5,7 @@
 #ifndef CORIUM_WINDOW_H
 #define CORIUM_WINDOW_H
 
-#include "crm.h"
+#include "corium.h"
 
 class Window {
 public:
@@ -37,6 +37,8 @@ void createWindow()
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_maj);//4
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_min);//5
+		
+		//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
         monitor = glfwGetPrimaryMonitor();
 

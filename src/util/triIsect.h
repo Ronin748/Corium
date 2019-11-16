@@ -624,7 +624,7 @@ int tri_sphere_intersection_test_3d(float v0[3], float v1[3], float v2[3], float
 	ADD(nv, nv, n);
 	CROSS(n, v2, v0);
 	ADD(nv, nv, n);
-	SCALAR(n, 0.33333f, nv);
+	SCALAR(n, 1.0f / 3.0f, nv);
 
 	NORM(n, n);
 	SCALAR(n, -r, n);

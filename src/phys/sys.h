@@ -29,6 +29,9 @@ std::mutex mtx;
 
 int collisions = 0;
 
+// fully dynamic
+bool fd = true;
+
 void updateObjs(int i_min, int i_max, int j_min, int j_max);
 
 void updateObjsM(int i_min, int i_max, int j_min, int j_max)

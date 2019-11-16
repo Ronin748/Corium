@@ -117,7 +117,7 @@ void loadScreen() {
         q1.loadSprite("gfx/test2.png", glm::vec4(0.0f, 0.0f, 100.0f, -100.0f));
         q2.loadSprite("gfx/test2.png", glm::vec4(0.0f, 0.0f, 100.0f, -100.0f));
 
-        crmlogo.loadSprite("gfx/misc/CRM_logo.png", glm::vec4(0.0f, 0.0f, 450.0f, -450.0f));
+        crmlogo.loadSprite("gfx/misc/Corium_logo.png", glm::vec4(0.0f, 0.0f, 480.0f, -480.0f));
 }
 
 void drawLoadingScreen(Renderer *renderer) {

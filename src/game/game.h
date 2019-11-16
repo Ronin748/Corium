@@ -9,7 +9,7 @@
 #include <cstdio>
 #include <ctime>
 
-#include "crm.h"
+#include "corium.h"
 #include "window.h"
 #include "input.h"
 #include "render/renderer.h"
@@ -18,83 +18,83 @@
 
 class Game {
 public:
-bool running = false;
+	bool running = false;
 
-bool win = false;
-bool lose = false;
-bool reset = false;
+	bool win = false;
+	bool lose = false;
+	bool reset = false;
 
-bool startScreen = false;
+	bool startScreen = false;
 
-Screen scr;
+	Screen scr;
 
-Window wndw;
-Input input;
+	Window wndw;
+	Input input;
 
-Player *thisPlayer;
-Camera *thisCamera;
+	Player *thisPlayer;
+	Camera *thisCamera;
 
-Renderer renderer;
+	Renderer renderer;
 
-Audio aud;
+	Audio aud;
 
-Map map;
+	Map map;
 
-int ticks = 0;
-int fps = 0;
+	int ticks = 0;
+	int fps = 0;
 
-int frame_ticks = 0;
-int game_ticks = 0;
+	int frame_ticks = 0;
+	int game_ticks = 0;
 
-bool ticking = false; // is game doing tick cycle?
+	bool ticking = false; // is game doing tick cycle?
 
-float renderTime = 0.0f;
-float tickTime = 0.0f;
+	float renderTime = 0.0f;
+	float tickTime = 0.0f;
 
-std::chrono::high_resolution_clock timer;
-std::chrono::system_clock::duration start_time;
+	std::chrono::high_resolution_clock timer;
+	std::chrono::system_clock::duration start_time;
 
-bool multithreading = true;
-bool loadShaders = true;
+	bool multithreading = true;
+	bool loadShaders = true;
 
-bool fileoutput = true;
+	bool fileoutput = true;
 
-FILE *outputfile;
+	FILE *outputfile = NULL;
 
-bool music = true;
+	bool music = true;
 
-bool startFullScr = false;
+	bool startFullScr = false;
 
-void init();
+	void init();
 
-void start();
+	void start();
 
-void refresh();
+	void refresh();
 
-void main();
-void gameRender();
-void rendererUpdate();
-void rendererReset();
+	void main();
+	void gameRender();
+	void rendererUpdate();
+	void rendererReset();
 
-void gameInput();
+	void gameInput();
 
-void loadGameCfg();
+	void loadGameCfg();
 
-int getTime();
+	int getTime();
 
-void tick();
+	void tick();
 
-std::vector<std::string> text_buffer;
+	std::vector<std::string> text_buffer;
 
-void print(std::string s);
+	void print(std::string s);
 
-void fullScr();
+	void fullScr();
 
-void loadingScreen();
+	void loadingScreen();
 
-void gameQuit();
+	void gameQuit();
 
-Game();
+	Game();
 };
 
 void loadSettings(std::string path, Game *game);

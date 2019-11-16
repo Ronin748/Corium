@@ -6,7 +6,11 @@
 #define CORIUM_CFGPARSER_H
 
 #include <game/game.h>
-#include "crmLang.h"
+#include "coriumlang.h"
+
+void loadControls(std::string path, Input *input)
+{
+}
 
 void loadSettings(std::string path, Game *game)
 {
@@ -67,14 +71,20 @@ void loadSettings(std::string path, Game *game)
                 if (expr(words, i, 2, "_PHYSICS")) {
                         game->map.physicsEnabled = (bool) atof(words[i + 1].c_str());
                 }
+                if (expr(words, i, 2, "_SLEEPING")) {
+                        game->map.sys.fd = !((bool) atoi(words[i + 1].c_str()));
+                }
                 if (expr(words, i, 2, "_FILEOUTPUT")) {
                         game->fileoutput = (bool) atof(words[i + 1].c_str());
                 }
                 if (expr(words, i, 2, "_DRAWLINES")) {
                         game->renderer.drawLines = (bool) atof(words[i + 1].c_str());
                 }
-                if (expr(words, i, 2, "_FULLSCR")) {
+                if (expr(words, i, 2, "_FULLSCREEN")) {
                         game->startFullScr = (bool) atof(words[i + 1].c_str());
+                }
+                if (expr(words, i, 2, "_STARTSCREEN")) {
+                        game->startScreen = (bool) atof(words[i + 1].c_str());
                 }
                 if (expr(words, i, 2, "_GLVER")) {
                         game->wndw.gl_maj = (int) atof(words[i + 1].c_str());
@@ -100,6 +110,10 @@ void loadSettings(std::string path, Game *game)
                 }
                 if (expr(words, i, 2, "_ANTIALIAS")) {
                         game->wndw.aa_samples = atoi(words[i + 1].c_str());
+                }
+                if (expr(words, i, 2, "_CONTROLS")) {
+                        std::string controlsPath = words[i + 1].c_str();
+                        //loadControls(controlsPath, &game->input);
                 }
                 if (expr(words, i, 2, "_RUN")) {
                         std::string scriptPath = words[i + 1].c_str();

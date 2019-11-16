@@ -5,38 +5,44 @@
 #ifndef CORIUM_INPUT_H
 #define CORIUM_INPUT_H
 
-#include "crm.h"
+#include "corium.h"
 
 class Input {
 public:
-void getKeys(GLFWwindow *window);
-void getMouse(GLFWwindow *window);
+	void getKeys(GLFWwindow *window);
+	void getMouse(GLFWwindow *window);
 
-std::vector<bool> keyDown;
-std::vector<bool> keyPressed;
+	std::vector<bool> keyDown;
+	std::vector<bool> keyPressed;
 
-std::vector<bool> mouseDown;
+	std::vector<bool> mouseDown;
 
-glm::dvec2 mousePos;
-glm::dvec2 mousePosOld;
-glm::dvec2 mousePosDiff;
-float mouseSpd;
+	glm::dvec2 mousePos;
+	glm::dvec2 mousePosOld;
+	glm::dvec2 mousePosDiff;
+	float mouseSpd;
 
-int jsnum = 0;     // joystick number
+	int jsnum = 0;     // joystick number
 
-bool winFocus;
-bool focused;
+	bool winFocus;
+	bool focused;
 
-bool fullscreen = false;
+	bool fullscreen = false;
 
-int ticks;
+	int ticks;
 
-GLFWwindow* thisWindow;
+	GLFWwindow* thisWindow;
 
-bool getKey(int id);
+	// TODO: control configs
+	int UP = 0;
+	int DOWN = 0;
+	int RIGHT = 0;
+	int LEFT = 0;
 
-Input()
-{
+	bool getKey(int id);
+
+	Input()
+	{
         winFocus = true;
         focused = false;
 
@@ -53,7 +59,7 @@ Input()
         std::fill(keyDown.begin(), keyDown.end(), false);
         std::fill(keyPressed.begin(), keyPressed.end(), false);
         std::fill(mouseDown.begin(), mouseDown.end(), false);
-}
+	}
 };
 
 #endif //CORIUM_INPUT_H

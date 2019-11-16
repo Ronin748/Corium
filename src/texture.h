@@ -5,7 +5,7 @@
 #ifndef CORIUM_TEXTURE_H
 #define CORIUM_TEXTURE_H
 
-#include "crm.h"
+#include "corium.h"
 
 class Texture {
 public:

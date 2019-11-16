@@ -53,7 +53,6 @@ GLuint Shader::loadShaders(const char *vertPath, const char *fragPath, bool src 
         GLint Result = GL_FALSE;
         int InfoLogLength;
 
-        //printf("Compiling shader : %s\n", vertPath);
         char const *VertexSourcePointer = VertexShaderCode.c_str();
         glShaderSource(VertexShaderID, 1, &VertexSourcePointer, NULL);
         glCompileShader(VertexShaderID);
@@ -70,7 +69,6 @@ GLuint Shader::loadShaders(const char *vertPath, const char *fragPath, bool src 
         glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
         glCompileShader(FragmentShaderID);
 
-        // Check Fragment Shader
         glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
         glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
         if (InfoLogLength > 0) {
@@ -164,7 +162,6 @@ GLuint Shader::loadGS(const char *vertPath, const char *fragPath, const char *gs
         glShaderSource(GeometryShaderID, 1, &GeometrySourcePointer, NULL);
         glCompileShader(GeometryShaderID);
 
-        // Check Fragment Shader
         glGetShaderiv(GeometryShaderID, GL_COMPILE_STATUS, &Result);
         glGetShaderiv(GeometryShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
         if (InfoLogLength > 0) {
@@ -177,7 +174,6 @@ GLuint Shader::loadGS(const char *vertPath, const char *fragPath, const char *gs
         glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
         glCompileShader(FragmentShaderID);
 
-        // Check Fragment Shader
         glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
         glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
         if (InfoLogLength > 0) {

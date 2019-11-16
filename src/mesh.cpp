@@ -6,12 +6,12 @@ std::vector<float> transform_mesh(std::vector<float> data, glm::mat4 matrix)
         std::vector<float> newData;
         newData.resize(data.size());
         for (int i = 0; i < newData.size(); i += 4) {
-                /* multiply vector with the matrix to pre-calculate vertex data for rendering */
+			// multiply vector with the matrix to pre-calculate vertex data for rendering 
                 glm::vec4 v2 =
                         matrix * glm::vec4(data[i], data[i + 1], data[i + 2],
                                            data[i + 3]);
 
-                /* get matrix translation data from the bottom row */
+                // get matrix translation data from the bottom row
                 newData[i] = v2.x + matrix[3][0];
                 newData[i + 1] = v2.y + matrix[3][1];
                 newData[i + 2] = v2.z + matrix[3][2];
@@ -91,7 +91,7 @@ bool Mesh::intersects(Mesh *another)
                                                                             normalData[i + 1],
                                                                             normalData[i + 2])) *(float)staticity;
 
-                                        glm::vec3 pn = fabs(std::max(0.0f, std::max(0.0f, glm::dot(tcn, -acn))))*normalize(tcn-acn);
+                                        glm::vec3 pn = (float) fabs(std::max(0.0f, std::max(0.0f, glm::dot(tcn, -acn))))*normalize(tcn-acn);
 
                                         if (glm::length(pn) <= 0.0f) {
                                                 pn = normalize(glm::vec3(0.0f, (tcn.y - acn.y), 0.0f));

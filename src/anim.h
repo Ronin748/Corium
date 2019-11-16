@@ -5,7 +5,7 @@
 #ifndef CORIUM_ANIM_H
 #define CORIUM_ANIM_H
 
-#include "crm.h"
+#include "corium.h"
 #include "mesh.h"
 
 class Anim {

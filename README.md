@@ -1,8 +1,8 @@
 # Corium Engine v1.4
 
-<img src="https://raw.githubusercontent.com/Ronin748/Corium/master/gfx/misc/CRM_logo.png" width="256" height="256">
+<img src="https://raw.githubusercontent.com/Roninkoi/Corium/master/gfx/misc/Corium_logo.png" width="256" height="256">
 
-Corium engine (CRM) v1.4.1, written in C++ using OpenGL,
+Corium engine v1.4.1, written in C++ using OpenGL,
 GLEW, GLFW, GLM, stb_image, pthreads
 
 Builds for Linux and Windows
@@ -21,7 +21,7 @@ Requires OpenGL 3.1, CPU with 4 cores optimal
 
 - dynamic multi-threaded physics
 
-- CRMLANG scripting
+- Coriumlang scripting
 
 - on-the-fly configuration
 
@@ -35,49 +35,47 @@ Press space or button 2 to start the game!
 
 ### Keyboard:
 
-```
-WASD ----------- Move
+WASD - Move
 
-Mouse/Arrows --- Rotate camera
+Mouse/Arrows - Rotate camera
 
-Space ---------- Jump
+Space - Jump
 
-Shift ---------- Sprint
+Shift - Sprint
 
-T -------------- Restart
+T - Restart
 
-Y -------------- Fly
+Y - Fly
 
-R -------------- Fly up
+R - Fly up
 
-F -------------- Fly down
+F - Fly down
 
-I -------------- Reload map
+I - Reload map
 
-O -------------- Reload settings
+O - Reload settings
 
-U -------------- Recompile shaders
+U - Recompile shaders
 
-M -------------- Mute music
+M - Mute music
 
-F11 ------------ Toggle fullscreen
+F11 - Toggle fullscreen
 
-F2 ------------- Show console
-```
+F2 - Show console
 
 ### Gamepad:
 
-```
-Left stick ---- Move
 
-Right stick --- Rotate camera
+Left stick - Move
 
-Button 1 ------ Charge
+Right stick - Rotate camera
 
-Button 2 ------ Jump
+Button 1 - Charge
 
-Button 3 ------ Flame
-```
+Button 2 - Jump
+
+Button 3 - Flame
+
 
 ## Screenshots
 

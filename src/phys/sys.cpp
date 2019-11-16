@@ -4,9 +4,6 @@
 
 #include "phys/sys.h"
 
-// fully dynamic
-bool fd = true;
-
 void Sys::update()
 {
         ++ticks;

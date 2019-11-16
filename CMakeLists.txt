@@ -76,7 +76,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/linux/include)
 
 set_target_properties(Corium PROPERTIES LINK_FLAGS -Wl,-rpath=$ORIGIN/lib,-z,origin)
 
-target_link_libraries(Corium GLEW glfw GL openal)
+target_link_libraries(Corium GLEW glfw GL)
 endif ()
 
 target_link_libraries(Corium "-Wl,--allow-multiple-definition") # solve later
