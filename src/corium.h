@@ -29,6 +29,9 @@
 
 #include "util/toString.h"
 
+#define CORIUM_VERSION "1.4"
+#define CORIUM_YEAR "2019"
+
 void gamePrint(std::string s);
 
 void gameRefresh();

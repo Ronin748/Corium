@@ -85,7 +85,7 @@ void Game::refresh()
 
 void Game::init()
 {
-        printf("CORIUM 1.4 RONINKOI 2019\n");
+	printf("CORIUM %s RONINKOI %s\n", CORIUM_VERSION, CORIUM_YEAR);
 
         thisPlayer = map.getPlayer();
         thisCamera = map.getCamera();
@@ -97,7 +97,7 @@ void Game::init()
         }
 
         print("===========================================================================\n");
-        print("--------------------- CORIUM ENGINE v1.40 BY RONINKOI ---------------------\n");
+        print("---------------------- CORIUM ENGINE " + toString(CORIUM_VERSION) + " BY RONINKOI ----------------------\n");
         print("--------------------------- " + toString(currentDateTime()) + " ---------------------------\n");
         print("===========================================================================\n\n");
 

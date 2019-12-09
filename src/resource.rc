@@ -1,5 +1,5 @@
-//GLFW_ICON ICON "..gfx/misc/CRM_logo.ico"
-id ICON "../gfx/misc/CRM_logo.ico"
+//GLFW_ICON ICON "..gfx/misc/Corium_logo.ico"
+id ICON "../gfx/misc/Corium_logo.ico"
 
 1 VERSIONINFO
 FILEVERSION     1,0,0,0
@@ -10,11 +10,11 @@ BEGIN
     BLOCK "080904E4"
     BEGIN
       VALUE "CompanyName", "Roninkoi"
-      VALUE "FileDescription", "CRM"
+      VALUE "FileDescription", "Corium game engine"
       VALUE "FileVersion", "1.0"
       VALUE "InternalName", "Corium"
       VALUE "LegalCopyright", "Roninkoi"
-      VALUE "OriginalFilename", "CRM.exe"
+      VALUE "OriginalFilename", "Corium.exe"
       VALUE "ProductName", "Corium"
       VALUE "ProductVersion", "1.4"
     END

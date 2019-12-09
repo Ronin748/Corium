@@ -42,7 +42,7 @@ void createWindow()
 
         monitor = glfwGetPrimaryMonitor();
 
-        window = glfwCreateWindow(window_w, window_h, "CRM", fullscreen ? monitor : NULL, NULL);
+        window = glfwCreateWindow(window_w, window_h, "Corium", fullscreen ? monitor : NULL, NULL);
 
         glfwMakeContextCurrent(window);
 

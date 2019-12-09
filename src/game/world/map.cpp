@@ -69,6 +69,12 @@ void Map::drawShadows(Renderer *renderer)
         }
 
         // GAME OBJECTS HERE
+        for (int i = 0; i < crabs.size(); ++i) {
+                if (crabs[i].rendered && crabs[i].shadows && inRange(&crabs[i]) &&
+                    (shadowsEnabled || crabs[i].phys.isStatic)) {
+					crabs[i].drawShadows(renderer);
+                }
+        }
 
         if (shadowsEnabled) {
                 thisPlayer->drawShadows(renderer);
@@ -86,6 +92,7 @@ void Map::drawObjs(Renderer *renderer)
                 environs[i].draw(renderer);
 
         // GAME OBJECTS HERE
+        crabs.back().draw(renderer);
 
         thisPlayer->draw(renderer);
 
@@ -184,6 +191,8 @@ void Map::update()
                 visible(&environs[i]);
 
         // GAME OBJECTS here
+        crabs.back().closestEnemy = thisPlayer;
+        crabs.back().tick();
 
         clearLights(renderer);
         findLights();

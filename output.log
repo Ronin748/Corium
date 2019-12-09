@@ -1,13 +1,13 @@
 ===========================================================================
 --------------------- CORIUM ENGINE v1.40 BY RONINKOI ---------------------
---------------------------- 2019-11-16.20:27:55 ---------------------------
+--------------------------- 2019-12-09.17:48:34 ---------------------------
 ===========================================================================
 
 max vertices: 33000
 max indices: 33001
 batch size: 33000
 max tex size: 34040
-OpenGL version: 3.1.0 NVIDIA 435.21
+OpenGL version: 3.1.0 NVIDIA 440.36
 GL_RENDERER: GeForce GTX 1070/PCIe/SSE2
 0(19) : warning C7533: global variable gl_FragColor is deprecated after version 120
 
@@ -178,112 +178,53 @@ loading chunk 131
 loading chunk 132
 loading chunk 133
 loading chunk 134
-FPS: 1639, rt: 0.493594 ms, draws: 66, batches: 5, tt: 1.04545 ms
+FPS: 1576, rt: 0.51269 ms, draws: 59, batches: 5, tt: 1.10606 ms
 lights: 3
-Player pos: 39.834, 10.3975, -29.7101
-key 65 pressed!
-FPS: 1688, rt: 0.483412 ms, draws: 63, batches: 5, tt: 1.01493 ms
-lights: 3
-Player pos: 39.6033, 10.5938, -33.6675
-key 65 pressed!
-FPS: 1543, rt: 0.536617 ms, draws: 66, batches: 6, tt: 1.10448 ms
-lights: 3
-Player pos: 41.2688, 10.6426, -23.9736
-key 68 pressed!
-key 83 pressed!
-FPS: 1577, rt: 0.527584 ms, draws: 66, batches: 6, tt: 1.0303 ms
-lights: 3
-Player pos: 35.727, 10.6099, -27.4324
-key 68 pressed!
+Player pos: 40, 10.3203, -30
 key 87 pressed!
-FPS: 1588, rt: 0.517632 ms, draws: 79, batches: 6, tt: 1.1194 ms
+FPS: 1643, rt: 0.477785 ms, draws: 68, batches: 6, tt: 1.04478 ms
 lights: 3
-Player pos: 38.6477, 12.9725, -23.2242
-key 68 pressed!
-key 87 pressed!
-FPS: 1704, rt: 0.4777 ms, draws: 69, batches: 6, tt: 1 ms
+Player pos: 35.0986, 10.5318, -18.4307
+FPS: 1658, rt: 0.481906 ms, draws: 62, batches: 6, tt: 1.0303 ms
 lights: 3
-Player pos: 26.1315, 10.5057, -14.0607
-key 65 pressed!
-key 87 pressed!
-FPS: 1892, rt: 0.42759 ms, draws: 61, batches: 4, tt: 1 ms
-lights: 3
-Player pos: 12.9748, 12.5839, 1.00014
-key 87 pressed!
-FPS: 1970, rt: 0.41269 ms, draws: 53, batches: 4, tt: 1 ms
-lights: 3
-Player pos: 0.422867, 12.5881, 9.53362
-key 65 pressed!
-FPS: 2103, rt: 0.375654 ms, draws: 43, batches: 4, tt: 1 ms
-lights: 3
-Player pos: 3.63522, 12.5808, 10.3332
-FPS: 1558, rt: 0.508986 ms, draws: 67, batches: 4, tt: 1.07576 ms
-lights: 3
-Player pos: 3.63523, 12.5808, 10.3332
-FPS: 1798, rt: 0.442714 ms, draws: 70, batches: 5, tt: 1 ms
-lights: 3
-Player pos: 3.63523, 12.5808, 10.3332
-FPS: 1558, rt: 0.508986 ms, draws: 94, batches: 6, tt: 1.04478 ms
-lights: 3
-Player pos: 3.63523, 12.5808, 10.3332
-FPS: 1818, rt: 0.424642 ms, draws: 93, batches: 6, tt: 1 ms
-lights: 3
-Player pos: 3.63523, 12.5808, 10.3332
-FPS: 1483, rt: 0.542819 ms, draws: 69, batches: 4, tt: 1.07463 ms
-lights: 3
-Player pos: 3.63523, 12.5808, 10.3332
-FPS: 1749, rt: 0.48199 ms, draws: 96, batches: 7, tt: 0.253731 ms
-lights: 3
-Player pos: 5.3218, 25.4558, 24.7735
-key 65 pressed!
+Player pos: 29.7439, 10.3668, -8.86254
 key 82 pressed!
-key 83 pressed!
-FPS: 1297, rt: 0.68697 ms, draws: 129, batches: 7, tt: 0 ms
+key 87 pressed!
+FPS: 1872, rt: 0.446581 ms, draws: 82, batches: 6, tt: 0.149254 ms
 lights: 3
-Player pos: -11.9594, 45.9558, 10.4823
+Player pos: 21.3138, 23.9949, 0.414617
 key 65 pressed!
+key 70 pressed!
 key 87 pressed!
-FPS: 1333, rt: 0.666167 ms, draws: 107, batches: 7, tt: 0 ms
+FPS: 1569, rt: 0.561504 ms, draws: 75, batches: 7, tt: 0.0149254 ms
 lights: 3
-Player pos: -7.20578, 34.706, -22.097
+Player pos: -3.36889, 6.49493, -2.84628
+FPS: 1941, rt: 0.446162 ms, draws: 45, batches: 5, tt: 0 ms
+lights: 3
+Player pos: -3.42754, 15.7449, -1.03507
+key 82 pressed!
 key 87 pressed!
+FPS: 2308, rt: 0.352686 ms, draws: 29, batches: 3, tt: 0 ms
+lights: 3
+Player pos: -10.7488, 17.4951, 27.9441
+key 82 pressed!
 key 87 pressed!
-FPS: 1513, rt: 0.579643 ms, draws: 92, batches: 6, tt: 0 ms
+FPS: 1909, rt: 0.452593 ms, draws: 106, batches: 7, tt: 0 ms
 lights: 3
-Player pos: 32.9896, 34.7058, -50.5355
-key 65 pressed!
-key 67 pressed!
+Player pos: -4.70948, 35.1199, 16.5005
 key 87 pressed!
-FPS: 1383, rt: 0.624729 ms, draws: 109, batches: 8, tt: 0.0151515 ms
+FPS: 1626, rt: 0.5369 ms, draws: 64, batches: 5, tt: 0 ms
 lights: 3
-Player pos: 63.1662, 34.7058, -25.5481
-key 65 pressed!
-key 67 pressed!
+Player pos: 33.1313, 15.8699, -33.739
+key 70 pressed!
 key 87 pressed!
-FPS: 1288, rt: 0.684783 ms, draws: 100, batches: 8, tt: 0.0149254 ms
+FPS: 1772, rt: 0.498307 ms, draws: 86, batches: 6, tt: 0 ms
 lights: 3
-Player pos: 31.8524, 34.7058, -17.702
-key 65 pressed!
-key 67 pressed!
-key 87 pressed!
-FPS: 1475, rt: 0.589153 ms, draws: 125, batches: 8, tt: 0.0149254 ms
+Player pos: 33.2988, 12.8449, -40.6492
+key 82 pressed!
+FPS: 1614, rt: 0.552045 ms, draws: 95, batches: 7, tt: 0 ms
 lights: 3
-Player pos: 43.4363, 34.7058, -34.8129
-FPS: 1354, rt: 0.642541 ms, draws: 128, batches: 8, tt: 0 ms
+Player pos: 39.8161, 28.3449, -37.1131
+FPS: 1535, rt: 0.594788 ms, draws: 92, batches: 7, tt: 0 ms
 lights: 3
-Player pos: 53.4562, 34.7058, -27.7639
-FPS: 1346, rt: 0.662704 ms, draws: 123, batches: 8, tt: 0.0149254 ms
-lights: 3
-Player pos: 53.4667, 34.7058, -27.7732
-FPS: 1371, rt: 0.657185 ms, draws: 123, batches: 8, tt: 0 ms
-lights: 3
-Player pos: 53.4667, 34.7058, -27.7732
-FPS: 1332, rt: 0.690691 ms, draws: 123, batches: 8, tt: 0.030303 ms
-lights: 3
-Player pos: 53.4667, 34.7058, -27.7732
-FPS: 1261, rt: 0.692308 ms, draws: 123, batches: 8, tt: 0.0454545 ms
-lights: 3
-Player pos: 53.4667, 34.7058, -27.7732
-FPS: 1353, rt: 0.67997 ms, draws: 123, batches: 8, tt: 0.0151515 ms
-lights: 3
-Player pos: 53.4667, 34.7058, -27.7732
+Player pos: 38.3206, 30.4699, -35.47

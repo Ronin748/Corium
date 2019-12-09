@@ -133,7 +133,7 @@ void drawLoadingScreen(Renderer *renderer) {
         loadingQuad.phys.pos.y += 2.1f;
         loadingQuad.phys.pos.x -= 1.0f;
         loadingQuad.phys.pos.z -= 0.5f;
-        drawText("Corium engine 1.4 Roninkoi 2017", loadingQuad);
+        drawText("Corium engine " + toString(CORIUM_VERSION) + " Roninkoi " + toString(CORIUM_YEAR), loadingQuad);
 
         crmlogo.phys.pos = glm::vec3(-0.5f, -0.5f, -1.0f);
         crmlogo.phys.update();

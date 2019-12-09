@@ -1,8 +1,8 @@
-# Corium Engine v1.4
+# Corium Engine 1.4
 
 <img src="https://raw.githubusercontent.com/Roninkoi/Corium/master/gfx/misc/Corium_logo.png" width="256" height="256">
 
-Corium engine v1.4.1, written in C++ using OpenGL,
+Corium game engine, written in C++ using OpenGL,
 GLEW, GLFW, GLM, stb_image, pthreads
 
 Builds for Linux and Windows

@@ -20,6 +20,11 @@
 #include "game/obj/camera.h"
 #include "game/entity/player.h"
 
+#include "game/entity/bat.h"
+#include "game/entity/crab.h"
+#include "game/entity/lizard.h"
+#include "game/entity/pelican.h"
+
 template<typename T>
 std::vector<T> *clearVector(std::vector<T> *vec)
 {
@@ -58,6 +63,11 @@ std::vector<Texture> textures;
 
 std::vector<Obj> objs;
 std::vector<Obj> environs;
+
+std::vector<Bat> bats;
+std::vector<Crab> crabs;
+std::vector<Lizard> lizards;
+std::vector<Pelican> pelicans;
 
 Obj sky;     // skybox
 float skyplane = 1.0f;
@@ -290,6 +300,10 @@ void load(Renderer *renderer)
         addPhysObjects();
 
         baked = false;
+
+        clearVector(&crabs);
+        crabs.push_back(Crab());
+        crabs.back().load();
 }
 
 // are shadows 420
