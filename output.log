@@ -1,6 +1,6 @@
 ===========================================================================
---------------------- CORIUM ENGINE v1.40 BY RONINKOI ---------------------
---------------------------- 2019-12-09.17:48:34 ---------------------------
+---------------------- CORIUM ENGINE 1.4 BY RONINKOI ----------------------
+--------------------------- 2019-12-10.16:03:58 ---------------------------
 ===========================================================================
 
 max vertices: 33000
@@ -178,53 +178,9 @@ loading chunk 131
 loading chunk 132
 loading chunk 133
 loading chunk 134
-FPS: 1576, rt: 0.51269 ms, draws: 59, batches: 5, tt: 1.10606 ms
+FPS: 1441, rt: 0.575989 ms, draws: 337, batches: 7, tt: 1.16667 ms
 lights: 3
 Player pos: 40, 10.3203, -30
-key 87 pressed!
-FPS: 1643, rt: 0.477785 ms, draws: 68, batches: 6, tt: 1.04478 ms
+FPS: 1446, rt: 0.569848 ms, draws: 67, batches: 6, tt: 1.19403 ms
 lights: 3
-Player pos: 35.0986, 10.5318, -18.4307
-FPS: 1658, rt: 0.481906 ms, draws: 62, batches: 6, tt: 1.0303 ms
-lights: 3
-Player pos: 29.7439, 10.3668, -8.86254
-key 82 pressed!
-key 87 pressed!
-FPS: 1872, rt: 0.446581 ms, draws: 82, batches: 6, tt: 0.149254 ms
-lights: 3
-Player pos: 21.3138, 23.9949, 0.414617
-key 65 pressed!
-key 70 pressed!
-key 87 pressed!
-FPS: 1569, rt: 0.561504 ms, draws: 75, batches: 7, tt: 0.0149254 ms
-lights: 3
-Player pos: -3.36889, 6.49493, -2.84628
-FPS: 1941, rt: 0.446162 ms, draws: 45, batches: 5, tt: 0 ms
-lights: 3
-Player pos: -3.42754, 15.7449, -1.03507
-key 82 pressed!
-key 87 pressed!
-FPS: 2308, rt: 0.352686 ms, draws: 29, batches: 3, tt: 0 ms
-lights: 3
-Player pos: -10.7488, 17.4951, 27.9441
-key 82 pressed!
-key 87 pressed!
-FPS: 1909, rt: 0.452593 ms, draws: 106, batches: 7, tt: 0 ms
-lights: 3
-Player pos: -4.70948, 35.1199, 16.5005
-key 87 pressed!
-FPS: 1626, rt: 0.5369 ms, draws: 64, batches: 5, tt: 0 ms
-lights: 3
-Player pos: 33.1313, 15.8699, -33.739
-key 70 pressed!
-key 87 pressed!
-FPS: 1772, rt: 0.498307 ms, draws: 86, batches: 6, tt: 0 ms
-lights: 3
-Player pos: 33.2988, 12.8449, -40.6492
-key 82 pressed!
-FPS: 1614, rt: 0.552045 ms, draws: 95, batches: 7, tt: 0 ms
-lights: 3
-Player pos: 39.8161, 28.3449, -37.1131
-FPS: 1535, rt: 0.594788 ms, draws: 92, batches: 7, tt: 0 ms
-lights: 3
-Player pos: 38.3206, 30.4699, -35.47
+Player pos: 40, 10.3203, -30
