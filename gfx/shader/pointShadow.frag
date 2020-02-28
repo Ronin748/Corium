@@ -214,7 +214,7 @@ void main()
     sigma += lighting*lght;
     gl_FragColor = vec4(sigma,fCol.a);
 
-    //downsample color (16-bit, apparently? rgb 12-bit)
+    //downsample color
     float s = 16.0f;
     gl_FragColor.r = floor(gl_FragColor.r*s)/s;
     gl_FragColor.g = floor(gl_FragColor.g*s)/s;
