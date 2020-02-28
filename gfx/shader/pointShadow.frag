@@ -10,8 +10,7 @@ in vec4 fCol;
 
 //layout(location = 0) out vec4 gl_FragColor;
 
-//CRM_LIGHTNUM replaced with value in settings
-#define MAX_LIGHTS CRM_LIGHTNUM
+#define MAX_LIGHTS CORIUM_LIGHTNUM
 
 uniform sampler2D diffuseTexture; // texture 0
 
@@ -41,13 +40,13 @@ uniform float dither;
 
 float lightAngle = 1.0f;
 
-float ShadowCalculation(vec3 fPos, int light_i)
+float shadowCheck(vec3 fPos, int light_i)
 {
     vec3 fragToLight = fPos - lights[light_i].pos;
 
     float closestDepth = 0.0f;
 
-CRM_TEXTURE_DEPTHMAP
+	CORIUM_TEXTURE_DEPTHMAP
 
     float c = 0.015f;
 
@@ -199,7 +198,7 @@ void main()
 
             lightAngle = abs(dot(lightDir, normal));
             // SHADOW CHECK
-            shadow = ShadowCalculation(fPos, l);
+            shadow = shadowCheck(fPos, l);
 
             // distance fading, inverse square law
             vec3 fadeDist = (fPos - lights[l].pos)/length(lightColor);

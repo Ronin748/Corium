@@ -1,13 +1,13 @@
 ===========================================================================
 ---------------------- CORIUM ENGINE 1.4 BY RONINKOI ----------------------
---------------------------- 2019-12-10.16:03:58 ---------------------------
+--------------------------- 2020-02-26.20:23:25 ---------------------------
 ===========================================================================
 
 max vertices: 33000
 max indices: 33001
 batch size: 33000
 max tex size: 34040
-OpenGL version: 3.1.0 NVIDIA 440.36
+OpenGL version: 3.1.0 NVIDIA 440.59
 GL_RENDERER: GeForce GTX 1070/PCIe/SSE2
 0(19) : warning C7533: global variable gl_FragColor is deprecated after version 120
 
@@ -16,12 +16,27 @@ Fragment info
 -------------
 0(19) : warning C7533: global variable gl_FragColor is deprecated after version 120
 
-0(232) : warning C7533: global variable gl_FragColor is deprecated after version 120
+0(22) : error C1503: undefined variable "CORIUM_LIGHTNUM"
+0(22) : error C1307: non constant expression for array size
+0(24) : error C1503: undefined variable "CORIUM_LIGHTNUM"
+0(24) : error C1307: non constant expression for array size
+0(52) : warning C7022: unrecognized profile specifier "CORIUM_TEXTURE_DEPTHMAP"
+0(52) : error C0502: syntax error at token "CORIUM_TEXTURE_DEPTHMAP"
+0(184) : error C1503: undefined variable "CORIUM_LIGHTNUM"
+0(216) : warning C7533: global variable gl_FragColor is deprecated after version 120
 
 Linking program
 Fragment info
 -------------
-0(232) : warning C7533: global variable gl_FragColor is deprecated after version 120
+0(22) : error C1503: undefined variable "CORIUM_LIGHTNUM"
+0(22) : error C1307: non constant expression for array size
+0(24) : error C1503: undefined variable "CORIUM_LIGHTNUM"
+0(24) : error C1307: non constant expression for array size
+0(52) : warning C7022: unrecognized profile specifier "CORIUM_TEXTURE_DEPTHMAP"
+0(52) : error C0502: syntax error at token "CORIUM_TEXTURE_DEPTHMAP"
+0(184) : error C1503: undefined variable "CORIUM_LIGHTNUM"
+0(216) : warning C7533: global variable gl_FragColor is deprecated after version 120
+(0) : error C2003: incompatible options for link
 
 Compiling shader: gfx/shader/pointShadowDepth.vert
 Compiling shader: gfx/shader/pointShadowDepth.gs
@@ -178,9 +193,9 @@ loading chunk 131
 loading chunk 132
 loading chunk 133
 loading chunk 134
-FPS: 1441, rt: 0.575989 ms, draws: 337, batches: 7, tt: 1.16667 ms
+FPS: 1465, rt: 0.559044 ms, draws: 67, batches: 6, tt: 1.22727 ms
 lights: 3
 Player pos: 40, 10.3203, -30
-FPS: 1446, rt: 0.569848 ms, draws: 67, batches: 6, tt: 1.19403 ms
+FPS: 1509, rt: 0.527502 ms, draws: 67, batches: 6, tt: 1.22388 ms
 lights: 3
 Player pos: 40, 10.3203, -30
