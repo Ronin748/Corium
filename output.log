@@ -1,6 +1,6 @@
 ===========================================================================
 ---------------------- CORIUM ENGINE 1.4 BY RONINKOI ----------------------
---------------------------- 2020-02-26.20:23:25 ---------------------------
+--------------------------- 2020-02-28.21:31:56 ---------------------------
 ===========================================================================
 
 max vertices: 33000
@@ -8,7 +8,28 @@ max indices: 33001
 batch size: 33000
 max tex size: 34040
 OpenGL version: 3.1.0 NVIDIA 440.59
-GL_RENDERER: GeForce GTX 1070/PCIe/SSE2
+GL_RENDERER: GeForce GTX 660M/PCIe/SSE2
+
+#version 140
+
+in vec4 vPos;
+in vec2 vTex;
+
+//layout(location = 0) out vec4 gl_FragColor;
+
+uniform sampler2D tex;
+
+void main()
+{
+/*float x = 410.0f*0.5f;
+  gl_FragColor = vec4(texture(tex, vec2(floor(vTex.x*x)/x, vTex.y)).rgb, 1.0f) + vec4(texture(tex, vec2(floor(vTex.x*x)/x+0.5f/x, vTex.y)).rgb, 1.0f);
+  gl_FragColor *= 0.5f;*/
+
+  vec4 texCol = texture(tex, vec2(vTex.x, vTex.y));
+  //texCol.rgb *= texCol.a;
+  gl_FragColor = vec4(texCol.rgb, 1.0f);
+
+}
 0(19) : warning C7533: global variable gl_FragColor is deprecated after version 120
 
 Linking program
@@ -16,27 +37,263 @@ Fragment info
 -------------
 0(19) : warning C7533: global variable gl_FragColor is deprecated after version 120
 
-0(22) : error C1503: undefined variable "CORIUM_LIGHTNUM"
-0(22) : error C1307: non constant expression for array size
-0(24) : error C1503: undefined variable "CORIUM_LIGHTNUM"
-0(24) : error C1307: non constant expression for array size
-0(52) : warning C7022: unrecognized profile specifier "CORIUM_TEXTURE_DEPTHMAP"
-0(52) : error C0502: syntax error at token "CORIUM_TEXTURE_DEPTHMAP"
-0(184) : error C1503: undefined variable "CORIUM_LIGHTNUM"
-0(216) : warning C7533: global variable gl_FragColor is deprecated after version 120
+
+#version 150
+
+precision lowp int;
+precision lowp float;
+
+in vec3 fPos;
+in vec3 fNorm;
+in vec2 fTex;
+in vec4 fCol;
+
+//layout(location = 0) out vec4 gl_FragColor;
+
+#define MAX_LIGHTS 8
+
+uniform sampler2D diffuseTexture; // texture 0
+
+uniform struct Light {
+    vec3 pos;
+    vec3 col;
+  //  samplerCube depthMap;
+} lights[MAX_LIGHTS];
+
+uniform samplerCube depthMap[MAX_LIGHTS];
+
+uniform float farPlane;
+
+uniform int max_lights;
+
+uniform vec2 ws; // window size
+
+uniform mat4 projection;
+uniform mat4 view;
+uniform mat4 model;
+
+uniform vec3 fogCol;
+
+uniform vec2 al;
+
+uniform float dither;
+
+float lightAngle = 1.0f;
+
+float shadowCheck(vec3 fPos, int light_i)
+{
+    vec3 fragToLight = fPos - lights[light_i].pos;
+
+    float closestDepth = 0.0f;
+
+if (light_i == 0) closestDepth = texture(depthMap[0], fragToLight).r;
+
+if (light_i == 1) closestDepth = texture(depthMap[1], fragToLight).r;
+
+if (light_i == 2) closestDepth = texture(depthMap[2], fragToLight).r;
+
+if (light_i == 3) closestDepth = texture(depthMap[3], fragToLight).r;
+
+if (light_i == 4) closestDepth = texture(depthMap[4], fragToLight).r;
+
+if (light_i == 5) closestDepth = texture(depthMap[5], fragToLight).r;
+
+if (light_i == 6) closestDepth = texture(depthMap[6], fragToLight).r;
+
+if (light_i == 7) closestDepth = texture(depthMap[7], fragToLight).r;
+
+
+    float c = 0.015f;
+
+    float currentDepth = length(fragToLight);
+    float bias = 0.1f+0.2f*tan(acos(min(lightAngle, 1.0f)));
+
+    closestDepth *= farPlane;
+
+    float shadow = currentDepth -  bias > closestDepth ? 1.0: 0.0;
+
+    return shadow;
+}
+uniform float limits[64] = float[64](
+                 0.015625f,
+                 0.515625f,
+                 0.140625f,
+                 0.640625f,
+                 0.046875f,
+                 0.546875f,
+                 0.171875f,
+                 0.671875f,
+
+                 0.765625f,
+                 0.265625f,
+                 0.890625f,
+                  0.390625f,
+                 0.796875f,
+                  0.296875f,
+                  0.921875f,
+                  0.421875f,
+
+                  0.203125f,
+                  0.703125f,
+                  0.078125f,
+                  0.578125f,
+                  0.234375f,
+                  0.734375f,
+                  0.109375f,
+                  0.609375f,
+
+                  0.953125f,
+                  0.453125f,
+                 0.828125f,
+                  0.328125f,
+                  0.984375f,
+                  0.484375f,
+                  0.859375f,
+                  0.359375f,
+
+                  0.0625f,
+                  0.5625f,
+                  0.1875f,
+                  0.6875f,
+                  0.03125f,
+                  0.53125f,
+                  0.15625f,
+                  0.65625f,
+
+                  0.8125f,
+                  0.3125f,
+                  0.9375f,
+                  0.4375f,
+                 0.78125f,
+                  0.28125f,
+                  0.90625f,
+                  0.40625f,
+
+                  0.25f,
+                  0.75f,
+                 0.125f,
+                  0.625f,
+                  0.21875f,
+                  0.71875f,
+                  0.09375f,
+                  0.59375f,
+
+                  1.0f,
+                  0.5f,
+                  0.875f,
+                  0.375f,
+                  0.96875f,
+                  0.46875f,
+                  0.84375f,
+                  0.34375f
+                  );
+
+float luma(vec3 color) {
+  return dot(color, vec3(0.299, 0.587*1.2f, 0.114));
+}
+
+float luma(vec4 color) {
+  return dot(color.rgb, vec3(0.299, 0.587*1.2f, 0.114));
+}
+
+float dither8x8(vec2 position, float brightness) {
+  int x = int(mod(position.x, 8.0));
+  int y = int(mod(position.y, 8.0));
+  int index = x + y * 8;
+  float limit = 0.0f;
+
+  //if (x < 8) {
+    limit = limits[index];
+    //limit = /*int(x + y)%3+*/int(x*0.5f + y)%2;
+
+  return brightness < limit*0.75f ? 0.95f : 1.05f;
+}
+
+vec3 dither8x8(vec2 position, vec3 color) {
+  return color * dither8x8(position, luma(color));
+}
+
+vec4 dither8x8(vec2 position, vec4 color) {
+  return vec4(color.rgb * dither8x8(position, luma(color)), 1.0);
+}
+
+void main()
+{
+    float amb = al.x;
+    float lght = al.y; // a + l = 1.0f
+
+    vec3 color = texture(diffuseTexture, fTex).rgb * fCol.rgb;
+    //color = fCol.rgb * vec3(0.5f, 0.8f, 1.0f);
+    vec3 normal = normalize(fNorm);
+    vec3 lighting = vec3(0.0f);
+    vec3 bloomLighting = vec3(0.0f);
+
+    vec3 viewPos = -inverse(view)[3].xyz;
+
+    // ambient colour
+    vec3 ambient = amb * color;
+
+    float shadow = 0.0f;
+
+    for (int l = 0; l < MAX_LIGHTS; ++l) {
+        if (length(lights[l].col) > 0.0f) {
+            vec3 lightColor = lights[l].col;
+            // DIFFUSE
+            vec3 lightDir = normalize(lights[l].pos - fPos);
+            float diff = max(dot(lightDir, normal), 0.0);
+            vec3 diffuse = diff * lightColor;
+            // SPEC
+            vec3 viewDir = normalize(-viewPos - fPos);
+            vec3 reflectDir = reflect(-lightDir, normal);
+            float spec = 0.0;
+            vec3 halfwayDir = normalize(lightDir + viewDir);
+            spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+            vec3 specular = spec * lightColor; // shinyness = multiplier
+            //specular = vec3(0.0f);
+
+            lightAngle = abs(dot(lightDir, normal));
+            // SHADOW CHECK
+            shadow = shadowCheck(fPos, l);
+
+            // distance fading, inverse square law
+            vec3 fadeDist = (fPos - lights[l].pos)/length(lightColor);
+            float fade = length(fadeDist)*length(fadeDist)*0.001f;
+
+            lighting += (1.0 - min(shadow+(1.0f-min(lightAngle,1.0f)), 1.0f)) *((((diffuse + specular)) * color))/max(fade, 1.0f);
+        }
+    }
+
+    float depth = length(viewPos+fPos)/(farPlane);
+
+    vec3 sigma = ambient;
+    sigma += lighting*lght;
+    gl_FragColor = vec4(sigma,fCol.a);
+
+    //downsample color
+    float s = 16.0f;
+    gl_FragColor.r = floor(gl_FragColor.r*s)/s;
+    gl_FragColor.g = floor(gl_FragColor.g*s)/s;
+    gl_FragColor.b = floor(gl_FragColor.b*s)/s;
+
+    vec4 ditval = dither8x8(vec2(gl_FragCoord.x, gl_FragCoord.y), gl_FragColor);
+    gl_FragColor *= ditval*dither*ditval*dither*4.0f + (1.0f - dither);
+    gl_FragColor *= 0.5f;
+    gl_FragColor.rgb += ambient*0.5f*dither; // adjust amb colors after dither
+
+    gl_FragColor /= length(gl_FragColor.rgb)*0.3f + 0.7f; // brighten and balance a bit
+
+    float fg = max(min((((1.0f - pow(2.7f, -depth- 0.1f)))*1.67f-0.2f)*1.2f, 1.0f), 0.0f);
+    gl_FragColor.rgb = fogCol*fg + gl_FragColor.rgb*(1.0f - fg); // FOG
+
+    if (texture(diffuseTexture, fTex).a == 0.0f)
+        discard;
+}
+0(231) : warning C7533: global variable gl_FragColor is deprecated after version 120
 
 Linking program
 Fragment info
 -------------
-0(22) : error C1503: undefined variable "CORIUM_LIGHTNUM"
-0(22) : error C1307: non constant expression for array size
-0(24) : error C1503: undefined variable "CORIUM_LIGHTNUM"
-0(24) : error C1307: non constant expression for array size
-0(52) : warning C7022: unrecognized profile specifier "CORIUM_TEXTURE_DEPTHMAP"
-0(52) : error C0502: syntax error at token "CORIUM_TEXTURE_DEPTHMAP"
-0(184) : error C1503: undefined variable "CORIUM_LIGHTNUM"
-0(216) : warning C7533: global variable gl_FragColor is deprecated after version 120
-(0) : error C2003: incompatible options for link
+0(231) : warning C7533: global variable gl_FragColor is deprecated after version 120
 
 Compiling shader: gfx/shader/pointShadowDepth.vert
 Compiling shader: gfx/shader/pointShadowDepth.gs
@@ -46,6 +303,19 @@ SCREEN WIDTH: 512 SCREEN HEIGHT: 300
 st 9
 sd t 10
 FBO id: 9
+
+#version 140
+
+//layout(location = 0) out vec4 gl_FragColor;
+
+in vec2 vTex;
+in vec4 vCol;
+
+uniform sampler2D tex;
+
+void main() {
+    gl_FragColor = texture(tex, vTex) * vCol;
+}
 0(12) : warning C7533: global variable gl_FragColor is deprecated after version 120
 
 Linking program
@@ -193,9 +463,35 @@ loading chunk 131
 loading chunk 132
 loading chunk 133
 loading chunk 134
-FPS: 1465, rt: 0.559044 ms, draws: 67, batches: 6, tt: 1.22727 ms
+FPS: 274, rt: 1 ms, draws: 67, batches: 6, tt: 7.65957 ms
 lights: 3
 Player pos: 40, 10.3203, -30
-FPS: 1509, rt: 0.527502 ms, draws: 67, batches: 6, tt: 1.22388 ms
+FPS: 465, rt: 0.843011 ms, draws: 79, batches: 7, tt: 2.4386 ms
 lights: 3
 Player pos: 40, 10.3203, -30
+FPS: 537, rt: 0.862197 ms, draws: 87, batches: 7, tt: 2.33333 ms
+lights: 3
+Player pos: 40, 10.3203, -30
+FPS: 525, rt: 0.92 ms, draws: 69, batches: 7, tt: 2.4 ms
+lights: 3
+Player pos: 33.5095, 10.6117, -22.6552
+key 65 pressed!
+key 87 pressed!
+key 65 pressed!
+key 87 pressed!
+FPS: 509, rt: 0.858546 ms, draws: 70, batches: 7, tt: 2.4 ms
+lights: 3
+Player pos: 25.5198, 10.5994, -9.3387
+key 87 pressed!
+FPS: 557, rt: 0.768402 ms, draws: 60, batches: 5, tt: 2.36923 ms
+lights: 3
+Player pos: 14.4233, 12.6974, 2.92605
+FPS: 538, rt: 0.819703 ms, draws: 62, batches: 7, tt: 2.35385 ms
+lights: 3
+Player pos: 1.17533, 12.5374, 9.35967
+FPS: 538, rt: 0.944238 ms, draws: 88, batches: 7, tt: 2.23077 ms
+lights: 3
+Player pos: 1.1422, 12.5648, 9.35127
+FPS: 502, rt: 0.874502 ms, draws: 88, batches: 7, tt: 2.6 ms
+lights: 3
+Player pos: 1.1422, 12.5648, 9.35127
