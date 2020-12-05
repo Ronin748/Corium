@@ -4,10 +4,10 @@
 class Bat : public Entity {
 public:
 
-Bat() : Entity()
-{
+	Bat() : Entity()
+	{
 
-}
+	}
 };
 
 #endif // CORIUM_BAT_H

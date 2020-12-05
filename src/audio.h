@@ -7,33 +7,34 @@
 
 class Audio {
 public:
-void playAudio()
-{
-}
+	void playAudio()
+	{
+	}
 
-void playMusic()
-{
-}
+	void playMusic()
+	{
+	}
 
-int playingMusic()
-{
-        return 0;
-}
+	int playingMusic()
+	{
+		return 0;
+	}
 
-void stopMusic()
-{
-}
+	void stopMusic()
+	{
+	}
 
-void initAudio()
-{
-}
+	void initAudio()
+	{
+	}
 
-void loadAudio()
-{
-}
+	void loadAudio()
+	{
+	}
 
-Audio() {
-}
+	Audio()
+	{
+	}
 };
 
 #endif //CORIUM_AUDIO_H

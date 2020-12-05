@@ -4,10 +4,10 @@
 class Lizard : public Entity {
 public:
 
-Lizard() : Entity()
-{
+	Lizard() : Entity()
+	{
 
-}
+	}
 };
 
 #endif // CORIUM_LIZARD_H

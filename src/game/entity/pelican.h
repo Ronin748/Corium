@@ -4,10 +4,10 @@
 class Pelican : public Entity {
 public:
 
-Pelican() : Entity()
-{
+	Pelican() : Entity()
+	{
 
-}
+	}
 };
 
 #endif // CORIUM_PELICAN_H

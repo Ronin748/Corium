@@ -9,27 +9,27 @@
 
 class Texture {
 public:
-std::string path = "";
+	std::string path = "";
 
-int w = 0, h = 0;
+	int w = 0, h = 0;
 
-GLuint tex = 0;
+	GLuint tex = 0;
 
-GLuint loadTexture(std::string path);
+	GLuint loadTexture(std::string path);
 
-void deleteTexture()
-{
-        if (tex > 0) {
-                glDeleteTextures(1, &tex);
-                path = "";
-                tex = 0;
-        }
-}
+	void deleteTexture()
+	{
+		if (tex > 0) {
+			glDeleteTextures(1, &tex);
+			path = "";
+			tex = 0;
+		}
+	}
 
-Texture()
-{
-        path = "";
-}
+	Texture()
+	{
+		path = "";
+	}
 /*
    ~Texture()
    {

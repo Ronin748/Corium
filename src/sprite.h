@@ -9,37 +9,38 @@
 
 class Sprite {
 public:
-Texture tex;
+	Texture tex;
 
-std::vector <glm::vec4> sprites;
-glm::vec4 *currentSprite;
+	std::vector<glm::vec4> sprites;
+	glm::vec4 *currentSprite;
 
-std::vector <int> anim_cycle;
-int anim;
-float animSpd;
-float animTicks;
+	std::vector<int> anim_cycle;
+	int anim;
+	float animSpd;
+	float animTicks;
 
-float ticks;
+	float ticks;
 
-void tickAnim(float newTicks);
+	void tickAnim(float newTicks);
 
-void setAnim(std::vector <int> newAnim, float newSpd);
-void addSprite(glm::vec4 newSprite);
+	void setAnim(std::vector<int> newAnim, float newSpd);
 
-void loadSprite(std::string path)
-{
-        currentSprite = &sprites[anim];
-        tex.loadTexture(path.c_str());
-}
+	void addSprite(glm::vec4 newSprite);
 
-Sprite()
-{
-        sprites.resize(1);
-        sprites[0] = glm::vec4(1.0, 1.0, 1.0, 1.0);
+	void loadSprite(std::string path)
+	{
+		currentSprite = &sprites[anim];
+		tex.loadTexture(path.c_str());
+	}
 
-        anim_cycle = {0};
-        currentSprite = &sprites[anim];
-}
+	Sprite()
+	{
+		sprites.resize(1);
+		sprites[0] = glm::vec4(1.0, 1.0, 1.0, 1.0);
+
+		anim_cycle = {0};
+		currentSprite = &sprites[anim];
+	}
 };
 
 #endif //CORIUM_SPRITE_H

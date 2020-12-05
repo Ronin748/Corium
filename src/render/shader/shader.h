@@ -6,40 +6,45 @@
 #define CORIUM_SHADER_H
 
 #include "corium.h"
-//#include "shadersrc.h" // this causes errors
 
 class Shader {
 public:
-GLuint program;
+	GLuint program;
 
-GLuint VertexShaderID;
-GLuint GeometryShaderID;
-GLuint FragmentShaderID;
+	GLuint vertexShaderID;
+	GLuint geometryShaderID;
+	GLuint fragmentShaderID;
 
-int max_lights = 8;
+	std::string vertPath;
+	std::string gsPath;
+	std::string fragPath;
 
-GLuint loadShaders(const char *vertPath, const char *fragPath, bool src);
+	int max_lights = 8;
 
-GLuint loadGS(const char *vertPath, const char *fragPath, const char *gsPath, bool src);
+	GLuint loadShaders(std::string vp, std::string fp);
 
-void init(const char *vertPath, const char *fragPath, bool ls)
-{
-        program = loadShaders(vertPath, fragPath, !ls);
-}
+	GLuint loadGS(std::string vp, std::string gp, std::string fp);
 
-void initGS(const char *vertPath, const char *fragPath, const char *gsPath, bool ls)
-{
-        program = loadGS(vertPath, fragPath, gsPath, !ls);
-}
+	std::string readShaderSource(std::string path);
 
-void destroyShader()
-{
-        glDeleteProgram(program);
-}
+	void init(std::string vp, std::string fp)
+	{
+		program = loadShaders(vp, fp);
+	}
 
-Shader()
-{
-}
+	void initGS(std::string vp, std::string gp, std::string fp)
+	{
+		program = loadGS(vp, gp, fp);
+	}
+
+	void destroyShader() const
+	{
+		glDeleteProgram(program);
+	}
+
+	Shader()
+	{
+	}
 };
 
 #endif //CORIUM_SHADER_H

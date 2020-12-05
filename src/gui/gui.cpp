@@ -4,9 +4,9 @@
 
 #include "gui.h"
 
-void GUI::drawGUI(ScreenRenderer *scrRndr)
+void GUI::drawGUI(GUIRenderer *guiRenderer)
 {
-        //scrRndr->draw(crosshair.tex, glm::mat4(1.0f), &crosshair.vertexData, &crosshair.texData, &crosshair.colData, &crosshair.indexData);
+	//scrRndr->draw(crosshair.texture, glm::mat4(1.0f), &crosshair.vertexData, &crosshair.texData, &crosshair.colData, &crosshair.indexData);
 }
 
 void GUI::loadGUI()

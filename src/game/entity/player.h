@@ -13,41 +13,43 @@
 
 class Player : public Entity {
 public:
-Camera *camera;
+	Camera *camera;
 
-Anims playerAnims;
+	Anims playerAnims;
 
-glm::vec3 renderPos = glm::vec3(0.0f);
+	glm::vec3 renderPos = glm::vec3(0.0f);
 
-glm::vec3 playerMov = glm::vec3(0.0f);
-glm::vec3 playerLastMov = glm::vec3(0.0f, 0.0f, -1.0f);
-float lastMovAngle = 0.0f;
+	glm::vec3 playerMov = glm::vec3(0.0f);
+	glm::vec3 playerLastMov = glm::vec3(0.0f, 0.0f, -1.0f);
+	float lastMovAngle = 0.0f;
 
-Mesh clipMesh;
+	Mesh clipMesh;
 
-bool flaming = false;
-bool flying = false;
+	bool flaming = false;
+	bool flying = false;
 
-glm::vec3 startPos = glm::vec3(0.0f);
-glm::vec3 startRot = glm::vec3(0.0f);
+	glm::vec3 startPos = glm::vec3(0.0f);
+	glm::vec3 startRot = glm::vec3(0.0f);
 
-void getPlayerCam();
+	void getPlayerCam();
 
-void loadPlayer();
-void restartPlayer();
+	void loadPlayer();
 
-void draw(Renderer *renderer);
-void drawShadows(Renderer *renderer);
+	void restartPlayer();
 
-void collide(Sys *ps);
+	void draw(Renderer *renderer);
 
-void getInput(Input *input);
+	void drawShadows(Renderer *renderer);
 
-void tick();
+	void collide(Sys *ps);
 
-Player() : Entity()
-{
-}
+	void getInput(Input *input);
+
+	void tick();
+
+	Player() : Entity()
+	{
+	}
 };
 
 #endif //CORIUM_PLAYER_H

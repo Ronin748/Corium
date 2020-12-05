@@ -11,36 +11,38 @@
 
 class Obj {
 public:
-Mesh mesh;
-Mesh physMesh;
-Phys phys;
+	Mesh mesh;
+	Mesh physMesh;
+	Phys phys;
 
-Texture tex;
+	Texture tex;
 
-bool rendered = true;
-bool shadows = true;
-bool visible = true;
-bool ro = false;     // render only
+	bool rendered = true;
+	bool shadows = true;
+	bool visible = true;
+	bool ro = false;     // render only
 
-void draw(Renderer *renderer);
+	void draw(Renderer *renderer);
 
-void render(Renderer *renderer);
+	void render(Renderer *renderer);
 
-void drawShadows(Renderer *renderer);
+	void drawShadows(Renderer *renderer);
 
-void renderShadows(Renderer *renderer);
+	void renderShadows(Renderer *renderer);
 
-void update();
-void updateMesh();
+	void update();
 
-bool hasMesh = false;
-void loadMesh(std::string sp, std::string pp = "");
+	void updateMesh();
 
-void loadObject(std::string sp, std::string tp, std::string pp = "");
+	bool hasMesh = false;
 
-Obj()
-{
-}
+	void loadMesh(std::string sp, std::string pp = "");
+
+	void loadObject(std::string sp, std::string tp, std::string pp = "");
+
+	Obj()
+	{
+	}
 };
 
 #endif //CORIUM_OBJ_H

@@ -6,21 +6,21 @@
 
 void Game::tick()
 {
-        ++ticks;
-        ++game_ticks;
-        renderer.ticks += 1.0f;
-        map.ticks += 1.0f;
-        scr.ticks += 1.0f;
+	++ticks;
+	++game_ticks;
+	renderer.ticks += 1.0f;
+	map.ticks += 1.0f;
+	screen.ticks += 1.0f;
 
-        gameInput();
+	gameInput();
 
-        if (reset) {
-                reset = false;
-                win = false;
-                lose = false;
-        }
+	if (reset) {
+		reset = false;
+		win = false;
+		lose = false;
+	}
 
-        map.update();
+	map.update();
 
-        scr.tick();
+	screen.tick();
 }

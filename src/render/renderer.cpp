@@ -6,796 +6,740 @@
 
 void Renderer::destroyRenderer()
 {
-        quadShader.destroyShader();
-        psShader.destroyShader();
-        psShaderDepth.destroyShader();
+	screenShader.destroyShader();
+	mainShader.destroyShader();
+	depthShader.destroyShader();
 
-        glDeleteBuffers(1, &vertexBuffer);
-        glDeleteBuffers(1, &texBuffer);
-        glDeleteBuffers(1, &colBuffer);
-        glDeleteBuffers(1, &normalBuffer);
-        glDeleteBuffers(1, &indexBuffer);
-        glDeleteBuffers(1, &quadBuf);
-        glDeleteBuffers(1, &indBuf);
+	glDeleteBuffers(1, &vertexBuffer);
+	glDeleteBuffers(1, &texBuffer);
+	glDeleteBuffers(1, &colBuffer);
+	glDeleteBuffers(1, &normalBuffer);
+	glDeleteBuffers(1, &indexBuffer);
+	glDeleteBuffers(1, &quadBuf);
+	glDeleteBuffers(1, &indBuf);
 
-        glDeleteVertexArrays(1, &vertexArrayID);
-        glDeleteTextures(1, &screenTex);
-        glDeleteTextures(1, &screenDepthTex);
-        glDeleteFramebuffers(1, &screenFBO);
+	glDeleteVertexArrays(1, &vertexArrayID);
+	glDeleteTextures(1, &screenTex);
+	glDeleteTextures(1, &screenDepthTex);
+	glDeleteFramebuffers(1, &screenFBO);
 }
 
 void Renderer::compileShaders()
 {
-        psShader.max_lights = MAX_LIGHTS;
+	mainShader.max_lights = MAX_LIGHTS;
 
-        quadShader.init("gfx/shader/fbo.vert", "gfx/shader/fbo.frag", loadShaders);
-        psShader.init("gfx/shader/pointShadow.vert", "gfx/shader/pointShadow.frag", loadShaders);
+	screenShader.init(screenShader.vertPath, screenShader.fragPath);
+	mainShader.init(mainShader.vertPath, mainShader.fragPath);
 
-        psShaderDepth.initGS("gfx/shader/pointShadowDepth.vert",
-                             "gfx/shader/pointShadowDepth.frag",
-                             "gfx/shader/pointShadowDepth.gs", loadShaders);
+	depthShader.initGS(depthShader.vertPath,
+					   depthShader.gsPath,
+					   depthShader.fragPath);
 }
 
 void Renderer::init()
 {
-        max_lights = MAX_LIGHTS;
-        lights.resize(MAX_LIGHTS);
+	max_lights = MAX_LIGHTS;
+	lights.resize(MAX_LIGHTS);
 
-        compileShaders();
+	compileShaders();
 
-        glUseProgram(psShader.program);
+	glUseProgram(mainShader.program);
 
-        glGenVertexArrays(1, &vertexArrayID);
-        glBindVertexArray(vertexArrayID);
+	glGenVertexArrays(1, &vertexArrayID);
+	glBindVertexArray(vertexArrayID);
 
-        glGenBuffers(1, &vertexBuffer);
-        glGenBuffers(1, &texBuffer);
-        glGenBuffers(1, &colBuffer);
-        glGenBuffers(1, &normalBuffer);
-        glGenBuffers(1, &indexBuffer);
+	glGenBuffers(1, &vertexBuffer);
+	glGenBuffers(1, &texBuffer);
+	glGenBuffers(1, &colBuffer);
+	glGenBuffers(1, &normalBuffer);
+	glGenBuffers(1, &indexBuffer);
 
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_BLEND);
-        glDisable(GL_STENCIL_TEST);
-        glEnable(GL_CULL_FACE);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glDisable(GL_STENCIL_TEST);
+	glEnable(GL_CULL_FACE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-//    glUniform1i(glGetUniformLocation(psShader.program, "diffuseTexture"), 0);
-//    glUniform1i(glGetUniformLocation(psShader.program, "depthMap"), 1);
+//    glUniform1i(glGetUniformLocation(mainShader.program, "diffuseTexture"), 0);
+//    glUniform1i(glGetUniformLocation(mainShader.program, "depthMap"), 1);
 
-        for (int l = 0; l < MAX_LIGHTS; ++l)
-                lights[l].initShadows(SHADOW_WIDTH, SHADOW_HEIGHT);
+	for (int l = 0; l < MAX_LIGHTS; ++l)
+		lights[l].initShadows(SHADOW_WIDTH, SHADOW_HEIGHT);
 
-        printf("SCREEN WIDTH: %s%s%s%s", &toString(SCREEN_WIDTH)[0], " SCREEN HEIGHT: ", &toString(SCREEN_HEIGHT)[0],
-               "\n");
+	printf("SCREEN WIDTH: %s%s%s%s", &toString(SCREEN_WIDTH)[0],
+		   " SCREEN HEIGHT: ", &toString(SCREEN_HEIGHT)[0], "\n");
 
-        // SCREEN FBO
-        glGenTextures(1, &screenTex);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, screenTex);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	// SCREEN FBO
+	glGenTextures(1, &screenTex);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, screenTex);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, SCREEN_WIDTH, SCREEN_HEIGHT,
+				 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
-        glGenFramebuffers(1, &screenFBO);
-        glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
+	glGenFramebuffers(1, &screenFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
 
-        glGenTextures(1, &screenDepthTex);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, screenDepthTex);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_DEPTH_COMPONENT,
-                     GL_UNSIGNED_BYTE, 0);
+	glGenTextures(1, &screenDepthTex);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, screenDepthTex);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SCREEN_WIDTH, SCREEN_HEIGHT,
+				 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
 
-        gamePrint("st " + toString(screenTex) + "\n");
-        gamePrint("sd t " + toString(screenDepthTex) + "\n");
+	gamePrint("st " + toString(screenTex) + "\n");
+	gamePrint("sd t " + toString(screenDepthTex) + "\n");
 
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenTex, 0);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, screenDepthTex, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenTex, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, screenDepthTex, 0);
 
-        // glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, screenTex, 0);
-        // glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, screenDepthTex, 0);
+	// glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, screenTex, 0);
+	// glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, screenDepthTex, 0);
 
-        GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-        glDrawBuffers(1, DrawBuffers);
+	GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+	glDrawBuffers(1, DrawBuffers);
 
-        glGenBuffers(1, &quadBuf);
-        glGenBuffers(1, &indBuf);
+	glGenBuffers(1, &quadBuf);
+	glGenBuffers(1, &indBuf);
 
-        auto fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-        if (fboStatus != GL_FRAMEBUFFER_COMPLETE)
-                gamePrint("Framebuffer not complete: " + toString(fboStatus) + "\n");
+	auto fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (fboStatus != GL_FRAMEBUFFER_COMPLETE)
+		gamePrint("Framebuffer not complete: " + toString(fboStatus) + "\n");
 
 
-        gamePrint("FBO id: " + toString(screenFBO) + "\n");
+	gamePrint("FBO id: " + toString(screenFBO) + "\n");
 }
 
-void Renderer::clear()
+void Renderer::clear() const
 {
-        glClearColor(clearCol.r, clearCol.g, clearCol.b, 1.0f);
+	glClearColor(clearCol.r, clearCol.g, clearCol.b, 1.0f);
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Renderer::update()
 {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        clear();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	clear();
 
-        glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
 
-        clear();
+	clear();
 
-        cMatrix = glm::mat4(1.0f);
-        pMatrix = glm::mat4(1.0f);
+	cMatrix = glm::mat4(1.0f);
+	pMatrix = glm::mat4(1.0f);
 
-        pMatrix = glm::perspective(fov, (float) w / (float) h, 0.05f, farPlane);
+	pMatrix = glm::perspective(fov, (float) w / (float) h, 0.05f, farPlane);
 
-        //glViewport(0, 0, w, h);
+	//glViewport(0, 0, current_w, current_h);
 
-        cMatrix = glm::translate(cMatrix, glm::vec3(0.0f, 0.0f, -camZ)); // for 3rd person
+	cMatrix = glm::translate(cMatrix, glm::vec3(0.0f, 0.0f, -camZ)); // for 3rd person
 
-        cMatrix = glm::rotate(cMatrix, camRot.y, glm::vec3(0.0f, 1.0f, 0.0f));
-        cMatrix = glm::rotate(cMatrix, camRot.x, glm::vec3(cos(camRot.y), 0.0, sin(camRot.y)));
+	cMatrix = glm::rotate(cMatrix, camRot.y, glm::vec3(0.0f, 1.0f, 0.0f));
+	cMatrix = glm::rotate(cMatrix, camRot.x, glm::vec3(cos(camRot.y), 0.0, sin(camRot.y)));
 
-        cMatrix = glm::translate(cMatrix, camPos);
+	cMatrix = glm::translate(cMatrix, camPos);
 }
 
 void Renderer::add(Texture *tex, std::vector<float> *vertexData, std::vector<float> *normalData,
-                   std::vector<float> *texData,
-                   std::vector<float> *colData, std::vector<int> *indexData)
+				   std::vector<float> *texData,
+				   std::vector<float> *colData, std::vector<int> *indexData)
 {
-        if (bufferVertices + vertexData->size() >= BATCH_SIZE ||
-            bufferIndices + indexData->size() >= BATCH_SIZE || (tex->path != this->tex.path)) {
-                flushBatch();
-        }
+	if (bufferVertices + vertexData->size() >= BATCH_SIZE ||
+		bufferIndices + indexData->size() >= BATCH_SIZE || (tex->path != this->texture.path)) {
+		flushBatch();
+	}
 
-        vertices = bufferVertices / 4;
+	vertices = bufferVertices / 4;
 
-        for (unsigned int i = 0; i < vertexData->size(); ++i) {
-                vertexArray[bufferVertices] = (vertexData->at(i));
-                texArray[bufferVertices] = (texData->at(i));
-                colArray[bufferVertices] = (colData->at(i));
-                normalArray[bufferVertices] = (normalData->at(i));
-                ++bufferVertices;
-        }
+	for (unsigned int i = 0; i < vertexData->size(); ++i) {
+		vertexArray[bufferVertices] = (vertexData->at(i));
+		texArray[bufferVertices] = (texData->at(i));
+		colArray[bufferVertices] = (colData->at(i));
+		normalArray[bufferVertices] = (normalData->at(i));
+		++bufferVertices;
+	}
 
-        for (unsigned int i = 0; i < indexData->size(); ++i) {
-                indexArray[bufferIndices] = indexData->at(i) + vertices;
-                ++bufferIndices;
-        }
+	for (int i : *indexData) {
+		indexArray[bufferIndices] = i + vertices;
+		++bufferIndices;
+	}
 
-        this->tex = *tex;
+	this->texture = *tex;
 }
 
 void Renderer::draw(Texture *tex, std::vector<float> *vertexData, std::vector<float> *normalData,
-                    std::vector<float> *texData,
-                    std::vector<float> *colData, std::vector<int> *indexData)
+					std::vector<float> *texData,
+					std::vector<float> *colData, std::vector<int> *indexData)
 {
-        ++drawsPerCycle;
+	++drawsPerCycle;
 
-        if (vertexData->size() < BATCH_SIZE && indexData->size() < BATCH_SIZE) {
-                add(tex, vertexData, normalData, texData, colData, indexData);
-        }
-        else {
-                //flushBatch();
-                render(tex, &uMatrix, vertexData, normalData, texData, colData, indexData);
-        }
+	if (vertexData->size() < BATCH_SIZE && indexData->size() < BATCH_SIZE) {
+		add(tex, vertexData, normalData, texData, colData, indexData);
+	} else {
+		flushBatch();
+
+		render(tex, &uMatrix, vertexData, normalData, texData, colData, indexData);
+	}
 }
 
 // flush batch and render FBO
 void Renderer::flushBatchFBO()
 {
-        flushBatch();
-        if (!rfbo) renderFBO();
+	flushBatch();
+	if (!rfbo) renderFBO();
 }
 
 void Renderer::flushUpdate()
 {
-        if (rfbo) {
-                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-                SCREEN_WIDTH = w;
-                SCREEN_HEIGHT = h;
-        }
-        else {
-                glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
-                SCREEN_WIDTH = 256 * 2 * SCREEN_SCALE;
-                SCREEN_HEIGHT = 150 * 2 * SCREEN_SCALE;
-        }
+	if (rfbo) {
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		SCREEN_WIDTH = w;
+		SCREEN_HEIGHT = h;
+	} else {
+		glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
+	}
 
-        glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        glUseProgram(psShader.program);
+	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	glUseProgram(mainShader.program);
 
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
-        glDisable(GL_BLEND);
-        //glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
-        //glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
+	//glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
 
-        //glDepthFunc(GL_LEQUAL); // changed from GL_LESS
-        glDepthFunc(GL_LESS);
-        glCullFace(GL_BACK);
+	//glDepthFunc(GL_LEQUAL); // changed from GL_LESS
+	glDepthFunc(GL_LESS);
+	glCullFace(GL_BACK);
 
-        glUniform2fv(glGetUniformLocation(psShader.program, "ws"), 1,
-                     &(glm::vec2((float) SCREEN_WIDTH, (float) SCREEN_HEIGHT))[0]);
+	glUniform2fv(glGetUniformLocation(mainShader.program, "ws"), 1,
+				 &(glm::vec2((float) SCREEN_WIDTH, (float) SCREEN_HEIGHT))[0]);
 
-        glUniform1f(glGetUniformLocation(psShader.program, "farPlane"), farPlane);
+	glUniform1f(glGetUniformLocation(mainShader.program, "farPlane"), farPlane);
 
-        glUniform1f(glGetUniformLocation(psShader.program, "dither"), (float) dithering);
+	glUniform1f(glGetUniformLocation(mainShader.program, "dither"), (float) dithering);
 
-        GLuint sampleTex = glGetUniformLocation(psShader.program, "diffuseTexture");
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, tex.tex);
-        glUniform1i(sampleTex, 0);
+	GLuint sampleTex = glGetUniformLocation(mainShader.program, "diffuseTexture");
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture.tex);
+	glUniform1i(sampleTex, 0);
 
-        glUniform3fv(glGetUniformLocation(psShader.program, "fogCol"), 1, &(clearCol)[0]);
-        glUniform2fv(glGetUniformLocation(psShader.program, "al"), 1, &(glm::vec2(this->amb, this->lght))[0]);
+	glUniform3fv(glGetUniformLocation(mainShader.program, "fogCol"), 1, &(clearCol)[0]);
+	glUniform2fv(glGetUniformLocation(mainShader.program, "al"), 1, &(glm::vec2(this->amb, this->lit))[0]);
 
 
-        for (int l = 0; l < max_lights; ++l) {
-                glUniform3fv(glGetUniformLocation(psShader.program, ("lights[" + toString(l) + "].pos").c_str()), 1,
-                             (const float *) glm::value_ptr(lights[l].pos));
-                glUniform3fv(glGetUniformLocation(psShader.program, ("lights[" + toString(l) + "].col").c_str()), 1,
-                             &(lights[l].col*((float)shadows))[0]);
+	for (int l = 0; l < max_lights; ++l) {
+		glUniform3fv(glGetUniformLocation(mainShader.program, ("lights[" + toString(l) + "].pos").c_str()), 1,
+					 (const float *) glm::value_ptr(lights[l].pos));
+		glUniform3fv(glGetUniformLocation(mainShader.program, ("lights[" + toString(l) + "].col").c_str()), 1,
+					 &(lights[l].col * ((float) shadows))[0]);
 
-                GLuint depthTex = glGetUniformLocation(psShader.program, ("depthMap[" + toString(l) + "]").c_str());
+		GLuint depthTex = glGetUniformLocation(mainShader.program, ("depthMap[" + toString(l) + "]").c_str());
 
-                glActiveTexture((GLenum) (GL_TEXTURE1 + l));
-                glBindTexture(GL_TEXTURE_CUBE_MAP, lights[l].depthCubemap);
-                glUniform1i(depthTex, 1 + l);
-        }
+		glActiveTexture((GLenum) (GL_TEXTURE1 + l));
+		glBindTexture(GL_TEXTURE_CUBE_MAP, lights[l].depthCubemap);
+		glUniform1i(depthTex, 1 + l);
+	}
 
-        glUniform1i(glGetUniformLocation(psShader.program, "max_lights"), max_lights);
+	glUniform1i(glGetUniformLocation(mainShader.program, "max_lights"), max_lights);
 
-        glUniformMatrix4fv(glGetUniformLocation(psShader.program, "proj"), 1, GL_FALSE, glm::value_ptr(pMatrix));
-        glUniformMatrix4fv(glGetUniformLocation(psShader.program, "view"), 1, GL_FALSE, glm::value_ptr(cMatrix));
-        glUniformMatrix4fv(glGetUniformLocation(psShader.program, "model"), 1, GL_FALSE, glm::value_ptr(uMatrix));
-
+	glUniformMatrix4fv(glGetUniformLocation(mainShader.program, "proj"), 1, GL_FALSE, glm::value_ptr(pMatrix));
+	glUniformMatrix4fv(glGetUniformLocation(mainShader.program, "view"), 1, GL_FALSE, glm::value_ptr(cMatrix));
+	glUniformMatrix4fv(glGetUniformLocation(mainShader.program, "model"), 1, GL_FALSE, glm::value_ptr(uMatrix));
 }
 
 void Renderer::flush()
 {
-        ++batchesPerCycle;
+	++batchesPerCycle;
 
-        glBindVertexArray(vertexArrayID);
+	glBindVertexArray(vertexArrayID);
 
-        glBindAttribLocation(psShader.program, 0, "pos");
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glVertexAttribPointer(
-                0,
-                4,
-                GL_FLOAT,
-                GL_FALSE,
-                0,
-                (void *) 0
-                );
+	glBindAttribLocation(mainShader.program, 0, "pos");
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glVertexAttribPointer(
+			0,
+			4,
+			GL_FLOAT,
+			GL_FALSE,
+			0,
+			nullptr
+	);
 
-        glBindAttribLocation(psShader.program, 1, "norm");
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-        glVertexAttribPointer(
-                1,
-                4,
-                GL_FLOAT,
-                GL_FALSE,
-                0,
-                (void *) 0
-                );
+	glBindAttribLocation(mainShader.program, 1, "norm");
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+	glVertexAttribPointer(
+			1,
+			4,
+			GL_FLOAT,
+			GL_FALSE,
+			0,
+			nullptr
+	);
 
-        glBindAttribLocation(psShader.program, 2, "tex");
-        glEnableVertexAttribArray(2);
-        glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
-        glVertexAttribPointer(
-                2,
-                4,
-                GL_FLOAT,
-                GL_FALSE,
-                0,
-                (void *) 0
-                );
+	glBindAttribLocation(mainShader.program, 2, "texture");
+	glEnableVertexAttribArray(2);
+	glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
+	glVertexAttribPointer(
+			2,
+			4,
+			GL_FLOAT,
+			GL_FALSE,
+			0,
+			nullptr
+	);
 
-        glBindAttribLocation(psShader.program, 3, "col");
-        glEnableVertexAttribArray(3);
-        glBindBuffer(GL_ARRAY_BUFFER, colBuffer);
-        glVertexAttribPointer(
-                3,
-                4,
-                GL_FLOAT,
-                GL_FALSE,
-                0,
-                (void *) 0
-                );
+	glBindAttribLocation(mainShader.program, 3, "col");
+	glEnableVertexAttribArray(3);
+	glBindBuffer(GL_ARRAY_BUFFER, colBuffer);
+	glVertexAttribPointer(
+			3,
+			4,
+			GL_FLOAT,
+			GL_FALSE,
+			0,
+			nullptr
+	);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 
+	glDrawElements(GL_TRIANGLES,
+				   bufferIndices, GL_UNSIGNED_INT,
+				   nullptr);
 
-        glDrawElements(GL_TRIANGLES,
-                       bufferIndices, GL_UNSIGNED_INT,
-                       (void *) 0);
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);
 
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(2);
-        glDisableVertexAttribArray(3);
+	bufferIndices = 0;
+	bufferVertices = 0;
 
-        bufferIndices = 0;
-        bufferVertices = 0;
-
-        uMatrix = glm::mat4(1.0f);
+	uMatrix = glm::mat4(1.0f);
 }
-bool rezzing = false;
+
 void Renderer::render(Texture *tex, glm::mat4 *objMatrix, std::vector<float> *vertexData,
-                      std::vector<float> *normalData,
-                      std::vector<float> *texData,
-                      std::vector<float> *colData, std::vector<int> *indexData)
+					  std::vector<float> *normalData,
+					  std::vector<float> *texData,
+					  std::vector<float> *colData, std::vector<int> *indexData)
 {
-        flushBatch();
+	flushBatch();
 
-        bufferVertices = vertexData->size();
-        bufferIndices = indexData->size();
-        uMatrix = *objMatrix;
-        this->tex = *tex;
+	bufferVertices = vertexData->size();
+	bufferIndices = indexData->size();
+	uMatrix = *objMatrix;
+	this->texture = *tex;
 
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(*vertexData)[0], GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(*vertexData)[0], GL_DYNAMIC_DRAW);
 
-        glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
-        glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(*texData)[0], GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
+	glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(*texData)[0], GL_DYNAMIC_DRAW);
 
-        glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-        glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(*normalData)[0], GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+	glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(*normalData)[0], GL_DYNAMIC_DRAW);
 
-        glBindBuffer(GL_ARRAY_BUFFER, colBuffer);
-        glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(*colData)[0], GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, colBuffer);
+	glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(*colData)[0], GL_DYNAMIC_DRAW);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferIndices * sizeof(int), &(*indexData)[0], GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferIndices * sizeof(int), &(*indexData)[0], GL_DYNAMIC_DRAW);
 
-        /*glActiveTexture(GL_TEXTURE0);
-           glBindTexture(GL_TEXTURE_2D, this->tex.tex);*/
+	flushUpdate();
 
-        flushUpdate();
-
-        flush();
+	flush();
 }
 
 void Renderer::drawLine(glm::vec3 l0, glm::vec3 l1)
 {
-        flushBatch();
+	flushBatch();
 
-        uMatrix = glm::mat4(1.0f);
+	uMatrix = glm::mat4(1.0f);
 
-        std::vector<float> vertexData = {l0.x, l0.y, l0.z, 1.0f, l1.x, l1.y, l1.z, 1.0f};
-        std::vector<float> normalData = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-        std::vector<float> texData = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-        std::vector<float> colData = {20.0f, 0.0f, 0.0f, 1.0f, 20.0f, 0.0f, 20.0f, 1.0f};
-        std::vector<int> indexData = {0, 1, 0, 1, 0, 1};
-        //render(&tex, &uMatrix, &vertexData, &normalData,&texData,&colData,&indexData);
-        bufferVertices = vertexData.size();
-        bufferIndices = indexData.size();
+	std::vector<float> vertexData = {l0.x, l0.y, l0.z, 1.0f, l1.x, l1.y, l1.z, 1.0f};
+	std::vector<float> normalData = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+	std::vector<float> texData = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+	std::vector<float> colData = {20.0f, 0.0f, 0.0f, 1.0f, 20.0f, 0.0f, 20.0f, 1.0f};
+	std::vector<int> indexData = {0, 1, 0, 1, 0, 1};
 
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(vertexData)[0], GL_DYNAMIC_DRAW);
+	bufferVertices = vertexData.size();
+	bufferIndices = indexData.size();
 
-        glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
-        glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(texData)[0], GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(vertexData)[0], GL_DYNAMIC_DRAW);
 
-        glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-        glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(normalData)[0], GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
+	glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(texData)[0], GL_DYNAMIC_DRAW);
 
-        glBindBuffer(GL_ARRAY_BUFFER, colBuffer);
-        glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(colData)[0], GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+	glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(normalData)[0], GL_DYNAMIC_DRAW);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferIndices * sizeof(int), &(indexData)[0], GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, colBuffer);
+	glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(colData)[0], GL_DYNAMIC_DRAW);
 
-        /*glActiveTexture(GL_TEXTURE0);
-           glBindTexture(GL_TEXTURE_2D, this->tex.tex);*/
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferIndices * sizeof(int), &(indexData)[0], GL_DYNAMIC_DRAW);
 
+	flushUpdate();
 
-        /*glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+	glBindVertexArray(vertexArrayID);
 
-           glEnable(GL_POLYGON_OFFSET_LINE);
+	glBindAttribLocation(mainShader.program, 0, "pos");
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glVertexAttribPointer(
+			0,
+			4,
+			GL_FLOAT,
+			GL_FALSE,
+			0,
+			nullptr
+	);
 
-           glPolygonOffset(0.0f, -500.0f);*/
+	glBindAttribLocation(mainShader.program, 1, "norm");
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+	glVertexAttribPointer(
+			1,
+			4,
+			GL_FLOAT,
+			GL_FALSE,
+			0,
+			nullptr
+	);
 
-        flushUpdate();
+	glBindAttribLocation(mainShader.program, 2, "texture");
+	glEnableVertexAttribArray(2);
+	glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
+	glVertexAttribPointer(
+			2,
+			4,
+			GL_FLOAT,
+			GL_FALSE,
+			0,
+			nullptr
+	);
 
-        glBindVertexArray(vertexArrayID);
+	glBindAttribLocation(mainShader.program, 3, "col");
+	glEnableVertexAttribArray(3);
+	glBindBuffer(GL_ARRAY_BUFFER, colBuffer);
+	glVertexAttribPointer(
+			3,
+			4,
+			GL_FLOAT,
+			GL_FALSE,
+			0,
+			nullptr
+	);
 
-        glBindAttribLocation(psShader.program, 0, "pos");
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glVertexAttribPointer(
-                0,
-                4,
-                GL_FLOAT,
-                GL_FALSE,
-                0,
-                (void *) 0
-                );
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-        glBindAttribLocation(psShader.program, 1, "norm");
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-        glVertexAttribPointer(
-                1,
-                4,
-                GL_FLOAT,
-                GL_FALSE,
-                0,
-                (void *) 0
-                );
+	glLineWidth(8.0f);
 
-        glBindAttribLocation(psShader.program, 2, "tex");
-        glEnableVertexAttribArray(2);
-        glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
-        glVertexAttribPointer(
-                2,
-                4,
-                GL_FLOAT,
-                GL_FALSE,
-                0,
-                (void *) 0
-                );
+	glDrawElements(GL_LINES,
+				   bufferIndices, GL_UNSIGNED_INT,
+				   nullptr);
 
-        glBindAttribLocation(psShader.program, 3, "col");
-        glEnableVertexAttribArray(3);
-        glBindBuffer(GL_ARRAY_BUFFER, colBuffer);
-        glVertexAttribPointer(
-                3,
-                4,
-                GL_FLOAT,
-                GL_FALSE,
-                0,
-                (void *) 0
-                );
+	glLineWidth(1.0f);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+	glDisableVertexAttribArray(3);
 
-        glLineWidth(8.0f);
+	bufferIndices = 0;
+	bufferVertices = 0;
 
-        glDrawElements(GL_LINES,
-                       bufferIndices, GL_UNSIGNED_INT,
-                       (void *) 0);
+	uMatrix = glm::mat4(1.0f);
 
-        glLineWidth(1.0f);
-
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(2);
-        glDisableVertexAttribArray(3);
-
-        bufferIndices = 0;
-        bufferVertices = 0;
-
-        uMatrix = glm::mat4(1.0f);
-
-        if (!rfbo) renderFBO();
-
-        //flush();
-
-        /*glPolygonOffset(0.0f, 0.0f);
-
-           glEnable(GL_POLYGON_OFFSET_LINE);
-
-           glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);*/
+	if (!rfbo) renderFBO();
 }
 
 void Renderer::flushBatch()
 {
-        if (bufferIndices > 2) {
-                uMatrix = glm::mat4(1.0f);
+	if (bufferIndices > 2) {
+		uMatrix = glm::mat4(1.0f);
 
-                glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-                glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), vertexArray, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), vertexArray, GL_DYNAMIC_DRAW);
 
-                glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
-                glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), texArray, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
+		glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), texArray, GL_DYNAMIC_DRAW);
 
-                glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-                glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), normalArray, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+		glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), normalArray, GL_DYNAMIC_DRAW);
 
-                glBindBuffer(GL_ARRAY_BUFFER, colBuffer);
-                glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), colArray, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, colBuffer);
+		glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), colArray, GL_DYNAMIC_DRAW);
 
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-                glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferIndices * sizeof(int), indexArray, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferIndices * sizeof(int), indexArray, GL_DYNAMIC_DRAW);
 
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, this->tex.tex);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, this->texture.tex);
 
-                //   if (rezzing)
-                //        flushUpdate(); //dont
+		glm::mat4 oldum = uMatrix;
+		int bv = bufferVertices;
+		int bi = bufferIndices;
 
-                glm::mat4 oldum = uMatrix;
-                int bv = bufferVertices;
-                int bi = bufferIndices;
+		flush();
 
-                flush();
+		if (drawLines) {
+			uMatrix = oldum;
+			bufferVertices = bv;
+			bufferIndices = bi;
 
-                if (drawLines) {
-                        uMatrix = oldum;
-                        bufferVertices = bv;
-                        bufferIndices = bi;
+			glBindBuffer(GL_ARRAY_BUFFER, colBuffer);
 
-                        glBindBuffer(GL_ARRAY_BUFFER, colBuffer);
-                        for (int i = 0; i < bufferVertices; i += 1) {
-                                colArray[i] = 0.0f;
-                        }
-                        glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), colArray, GL_DYNAMIC_DRAW);
+			for (int i = 0; i < bufferVertices; i += 1)
+				colArray[i] = 0.0f;
 
-                        glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+			glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), colArray, GL_DYNAMIC_DRAW);
 
-                        glEnable(GL_POLYGON_OFFSET_LINE);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-                        glPolygonOffset(0.0f, -500.0f);
+			glEnable(GL_POLYGON_OFFSET_LINE);
 
-                        flush();
+			glPolygonOffset(0.0f, -500.0f);
 
-                        glPolygonOffset(0.0f, 0.0f);
+			flush();
 
-                        glEnable(GL_POLYGON_OFFSET_LINE);
+			glPolygonOffset(0.0f, 0.0f);
 
-                        glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-                }
-        }
+			glEnable(GL_POLYGON_OFFSET_LINE);
+
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
+	}
 }
 
 void Renderer::drawShadows(std::vector<float> *vertexData, std::vector<int> *indexData)
 {
-        if (vertexData->size() < BATCH_SIZE && indexData->size() < BATCH_SIZE) {
-                addShadows(vertexData, indexData);
-        }
-        else {
-                renderShadows(&uMatrix, vertexData, indexData);
-        }
+	if (vertexData->size() < BATCH_SIZE && indexData->size() < BATCH_SIZE) {
+		addShadows(vertexData, indexData);
+	} else {
+		renderShadows(&uMatrix, vertexData, indexData);
+	}
 }
 
 void Renderer::addShadows(std::vector<float> *vertexData, std::vector<int> *indexData)
 {
-        if ((bufferVertices + vertexData->size() >= BATCH_SIZE ||
-             bufferIndices + indexData->size() >= BATCH_SIZE)) {
-                flushShadows();
-        }
+	if ((bufferVertices + vertexData->size() >= BATCH_SIZE ||
+		 bufferIndices + indexData->size() >= BATCH_SIZE)) {
+		flushShadows();
+	}
 
-        int vertices = bufferVertices / 4;
+	int vertNum = bufferVertices / 4;
 
-        for (unsigned int i = 0; i < vertexData->size(); ++i) {
-                vertexArray[bufferVertices] = (vertexData->at(i));
-                ++bufferVertices;
-        }
+	for (float &i : *vertexData) {
+		vertexArray[bufferVertices] = i;
+		++bufferVertices;
+	}
 
-        for (unsigned int i = 0; i < indexData->size(); ++i) {
-                indexArray[bufferIndices] = indexData->at(i) + vertices;
-                ++bufferIndices;
-        }
+	for (int i : *indexData) {
+		indexArray[bufferIndices] = i + vertNum;
+		++bufferIndices;
+	}
 }
 
 void Renderer::flushShadows()
 {
-        uMatrix = glm::mat4(1.0f);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), vertexArray, GL_DYNAMIC_DRAW);
+	uMatrix = glm::mat4(1.0f);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), vertexArray, GL_DYNAMIC_DRAW);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferIndices * sizeof(int), indexArray, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferIndices * sizeof(int), indexArray, GL_DYNAMIC_DRAW);
 
-        drawShadowMap();
+	drawShadowMap();
 }
 
 void Renderer::renderShadows(glm::mat4 *objMatrix, std::vector<float> *vertexData, std::vector<int> *indexData)
 {
-        flushShadows();
+	flushShadows();
 
-        bufferVertices = vertexData->size();
-        bufferIndices = indexData->size();
-        uMatrix = *objMatrix;
+	bufferVertices = vertexData->size();
+	bufferIndices = indexData->size();
+	uMatrix = *objMatrix;
 
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(*vertexData)[0], GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), &(*vertexData)[0], GL_DYNAMIC_DRAW);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferIndices * sizeof(int), &(*indexData)[0], GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferIndices * sizeof(int), &(*indexData)[0], GL_DYNAMIC_DRAW);
 
-        drawShadowMap();
+	drawShadowMap();
 }
 
 void Renderer::clearShadows()
 {
-        for (int l = 0; l < max_lights; ++l) {
-                glBindFramebuffer(GL_FRAMEBUFFER, lights[l].depthMapFBO);
-                clear();
-        }
+	for (int l = 0; l < max_lights; ++l) {
+		glBindFramebuffer(GL_FRAMEBUFFER, lights[l].depthMapFBO);
+		clear();
+	}
 }
 
 void Renderer::drawShadowMap()
 {
-        //++batchesPerCycle; // count shadows too?
+	//++batchesPerCycle; // count shadows too?
 
-        GLfloat aspect = ((GLfloat) SHADOW_WIDTH) / ((GLfloat) SHADOW_HEIGHT);
-        GLfloat near = 0.3f;
-        GLfloat far = farPlane;
-        glm::mat4 shadowProj = glm::perspective((float) (M_PI / 2.0f), aspect, near, far);
+	GLfloat aspect = ((GLfloat) SHADOW_WIDTH) / ((GLfloat) SHADOW_HEIGHT);
+	GLfloat near = 0.3f;
+	GLfloat far = farPlane;
+	glm::mat4 shadowProj = glm::perspective((float) (M_PI / 2.0f), aspect, near, far);
 
-        glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 
-        glUseProgram(psShaderDepth.program);
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-        glDepthFunc(GL_LESS);
+	glUseProgram(depthShader.program);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glDepthFunc(GL_LESS);
 
-        glUniform1f(glGetUniformLocation(psShaderDepth.program, "farPlane"), far);
+	glUniform1f(glGetUniformLocation(depthShader.program, "farPlane"), far);
 
-        glUniformMatrix4fv(glGetUniformLocation(psShaderDepth.program, "model"), 1, GL_FALSE,
-                           (const float *) glm::value_ptr(uMatrix));
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, (void *) 0);
+	glUniformMatrix4fv(glGetUniformLocation(depthShader.program, "model"), 1, GL_FALSE,
+					   (const float *) glm::value_ptr(uMatrix));
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-        for (light_i = 0; light_i < max_lights; ++light_i) {
-                std::vector<glm::mat4> shadowTransforms;
-                shadowTransforms.push_back(
-                        shadowProj * glm::lookAt(lights[light_i].pos, lights[light_i].pos + glm::vec3(1.0, 0.0, 0.0),
-                                                 glm::vec3(0.0, -1.0, 0.0)));
-                shadowTransforms.push_back(
-                        shadowProj * glm::lookAt(lights[light_i].pos, lights[light_i].pos + glm::vec3(-1.0, 0.0, 0.0),
-                                                 glm::vec3(0.0, -1.0, 0.0)));
-                shadowTransforms.push_back(
-                        shadowProj * glm::lookAt(lights[light_i].pos, lights[light_i].pos + glm::vec3(0.0, 1.0, 0.0),
-                                                 glm::vec3(0.0, 0.0, 1.0)));
-                shadowTransforms.push_back(
-                        shadowProj * glm::lookAt(lights[light_i].pos, lights[light_i].pos + glm::vec3(0.0, -1.0, 0.0),
-                                                 glm::vec3(0.0, 0.0, -1.0)));
-                shadowTransforms.push_back(
-                        shadowProj * glm::lookAt(lights[light_i].pos, lights[light_i].pos + glm::vec3(0.0, 0.0, 1.0),
-                                                 glm::vec3(0.0, -1.0, 0.0)));
-                shadowTransforms.push_back(
-                        shadowProj * glm::lookAt(lights[light_i].pos, lights[light_i].pos + glm::vec3(0.0, 0.0, -1.0),
-                                                 glm::vec3(0.0, -1.0, 0.0)));
+	for (light_i = 0; light_i < max_lights; ++light_i) {
+		std::vector<glm::mat4> shadowTransforms;
+		shadowTransforms.push_back(
+				shadowProj * glm::lookAt(lights[light_i].pos, lights[light_i].pos + glm::vec3(1.0, 0.0, 0.0),
+										 glm::vec3(0.0, -1.0, 0.0)));
+		shadowTransforms.push_back(
+				shadowProj * glm::lookAt(lights[light_i].pos, lights[light_i].pos + glm::vec3(-1.0, 0.0, 0.0),
+										 glm::vec3(0.0, -1.0, 0.0)));
+		shadowTransforms.push_back(
+				shadowProj * glm::lookAt(lights[light_i].pos, lights[light_i].pos + glm::vec3(0.0, 1.0, 0.0),
+										 glm::vec3(0.0, 0.0, 1.0)));
+		shadowTransforms.push_back(
+				shadowProj * glm::lookAt(lights[light_i].pos, lights[light_i].pos + glm::vec3(0.0, -1.0, 0.0),
+										 glm::vec3(0.0, 0.0, -1.0)));
+		shadowTransforms.push_back(
+				shadowProj * glm::lookAt(lights[light_i].pos, lights[light_i].pos + glm::vec3(0.0, 0.0, 1.0),
+										 glm::vec3(0.0, -1.0, 0.0)));
+		shadowTransforms.push_back(
+				shadowProj * glm::lookAt(lights[light_i].pos, lights[light_i].pos + glm::vec3(0.0, 0.0, -1.0),
+										 glm::vec3(0.0, -1.0, 0.0)));
 
-                glBindFramebuffer(GL_FRAMEBUFFER, lights[light_i].depthMapFBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, lights[light_i].depthMapFBO);
 
-                for (GLuint i = 0; i < 6; ++i)
-                        glUniformMatrix4fv(
-                                glGetUniformLocation(psShaderDepth.program,
-                                                     ("shadowTransforms[" + toString(i) + "]").c_str()), 1,
-                                GL_FALSE, glm::value_ptr(shadowTransforms[i]));
+		for (GLuint i = 0; i < 6; ++i)
+			glUniformMatrix4fv(
+					glGetUniformLocation(depthShader.program,
+										 ("shadowTransforms[" + toString(i) + "]").c_str()), 1,
+					GL_FALSE, glm::value_ptr(shadowTransforms[i])
+			);
 
-                glUniform3fv(glGetUniformLocation(psShaderDepth.program, "lightPos"), 1,
-                             (const float *) glm::value_ptr(lights[light_i].pos));
-/*
-        glDrawRangeElements(GL_TRIANGLES, 0, bufferVertices - 1, bufferIndices, GL_UNSIGNED_INT,
-                            (void *) 0);*/
+		glUniform3fv(glGetUniformLocation(depthShader.program, "lightPos"), 1,
+					 (const float *) glm::value_ptr(lights[light_i].pos));
 
-                glDrawElements(GL_TRIANGLES,
-                               bufferIndices, GL_UNSIGNED_INT,
-                               (void *) 0);
-        }
+		glDrawElements(GL_TRIANGLES,
+					   bufferIndices, GL_UNSIGNED_INT,
+					   nullptr);
+	}
 
-        glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(0);
 
-        bufferIndices = 0;
-        bufferVertices = 0;
+	bufferIndices = 0;
+	bufferVertices = 0;
 }
-int screenshots = 0;
+
 void Renderer::renderFBO()
 {
 
-        float verts[32] = {
-                0.0f, -1.0f, -1.0f, -1.0f,
-                1.0f, -1.0f, -1.0f, -1.0f,
-                1.0f, 1.0f, -1.0f, -1.0f,
-                0.0f, 1.0f, -1.0f, -1.0f,
+	float verts[32] = {
+			-1.0f, -1.0f, -1.0f, -1.0f,
+			1.0f, -1.0f, -1.0f, -1.0f,
+			1.0f, 1.0f, -1.0f, -1.0f,
+			-1.0f, 1.0f, -1.0f, -1.0f
+	};
 
-                -1.0f, -1.0f, -1.0f, -1.0f,
-                0.0f, -1.0f, -1.0f, -1.0f,
-                0.0f, 1.0f, -1.0f, -1.0f,
-                -1.0f, 1.0f, -1.0f, -1.0f
-        };
+	float texes[32] = {
+			0.0f, 0.0f, 1.0f, 1.0f,
+			1.0f, 0.0f, 1.0f, 1.0f,
+			1.0f, 1.0f, 1.0f, 1.0f,
+			0.0f, 1.0f, 1.0f, 1.0f,
+	};
 
-        float x0 = -this->xSpacing;
-        float x1 = this->xSpacing;
+	int indices[12] = {
+			0, 1, 2,
+			0, 2, 3
+	};
 
-        float w0 = 0.0f;
-        float w1 = 0.0f;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	clear();
 
-        float texes[32] = {
-                (0.0f + 1.0f) / 2.0f + x0, (-1.0f + 1.0f) / 2.0f, 1.0f + w0, 1.0f,
-                (1.0f + 1.0f) / 2.0f + x0, (-1.0f + 1.0f) / 2.0f, 1.0f + w0, 1.0f,
-                (1.0f + 1.0f) / 2.0f + x0, (1.0f + 1.0f) / 2.0f, 1.0f + w0, 1.0f,
-                (0.0f + 1.0f) / 2.0f + x0, (1.0f + 1.0f) / 2.0f, 1.0f + w0, 1.0f,
+	glViewport(0, 0, w, h);
 
-                (-1.0f + 1.0f) / 2.0f + x1, (-1.0f + 1.0f) / 2.0f, 1.0f + w1, 1.0f,
-                (0.0f + 1.0f) / 2.0f + x1, (-1.0f + 1.0f) / 2.0f, 1.0f + w1, 1.0f,
-                (0.0f + 1.0f) / 2.0f + x1, (1.0f + 1.0f) / 2.0f, 1.0f + w1, 1.0f,
-                (-1.0f + 1.0f) / 2.0f + x1, (1.0f + 1.0f) / 2.0f, 1.0f + w1, 1.0f
-        };
-        int indices[12] = {
-                0, 1, 2,
-                0, 2, 3,
-                4, 5, 6,
-                4, 6, 7
-        };
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
+	glDisable(GL_CULL_FACE);
 
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        clear();
+	glUseProgram(screenShader.program);
 
-        glViewport(0, 0, w, h);
+	GLuint sampleTex = glGetUniformLocation(screenShader.program, "texture");
 
-        glEnable(GL_DEPTH_TEST);
-        glDisable(GL_BLEND);
-        /*glDisable(GL_BLEND);
+	glUniform1i(sampleTex, 0);
+	glActiveTexture(GL_TEXTURE0);
 
-           glDisable(GL_DEPTH_TEST);*/
-        glDisable(GL_CULL_FACE);
+	glBindTexture(GL_TEXTURE_2D, screenTex);
 
-        glUseProgram(quadShader.program);
-/*
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, screenTex);*/
+	glBindBuffer(GL_ARRAY_BUFFER, quadBuf);
+	glBufferData(GL_ARRAY_BUFFER, 4 * 4 * 2 * sizeof(float), verts, GL_DYNAMIC_DRAW);
 
-        GLuint sampleTex = glGetUniformLocation(quadShader.program, "tex");
+	glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
+	glBufferData(GL_ARRAY_BUFFER, 4 * 4 * 2 * sizeof(float), texes, GL_DYNAMIC_DRAW);
 
-        glUniform1i(sampleTex, 0);
-        glActiveTexture(GL_TEXTURE0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBuf);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * 2 * sizeof(int), indices, GL_DYNAMIC_DRAW);
 
-        glBindTexture(GL_TEXTURE_2D, screenTex);
+	glBindAttribLocation(screenShader.program, 0, "pos");
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, quadBuf);
+	glVertexAttribPointer(
+			0,
+			4,
+			GL_FLOAT,
+			GL_FALSE,
+			0,
+			nullptr
+	);
+	glBindAttribLocation(screenShader.program, 1, "texture");
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
+	glVertexAttribPointer(
+			1,
+			4,
+			GL_FLOAT,
+			GL_FALSE,
+			0,
+			nullptr
+	);
 
-        glBindBuffer(GL_ARRAY_BUFFER, quadBuf);
-        glBufferData(GL_ARRAY_BUFFER, 4 * 4 * 2 * sizeof(float), verts, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBuf);
 
-        glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
-        glBufferData(GL_ARRAY_BUFFER, 4 * 4 * 2 * sizeof(float), texes, GL_DYNAMIC_DRAW);
+	glDrawElements(GL_TRIANGLES,
+				   12, GL_UNSIGNED_INT,
+				   nullptr);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBuf);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * 2 * sizeof(int), indices, GL_DYNAMIC_DRAW);
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 
-        glBindAttribLocation(quadShader.program, 0, "pos");
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, quadBuf);
-        glVertexAttribPointer(
-                0,
-                4,
-                GL_FLOAT,
-                GL_FALSE,
-                0,
-                (void *) 0
-                );
-        glBindAttribLocation(quadShader.program, 1, "tex");
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
-        glVertexAttribPointer(
-                1,
-                4,
-                GL_FLOAT,
-                GL_FALSE,
-                0,
-                (void *) 0
-                );
+	bufferIndices = 0;
+	bufferVertices = 0;
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBuf);
-/*
-    glDrawRangeElements(GL_TRIANGLES, 0, 12, 12, GL_UNSIGNED_INT,
-                        (void *) 0);*/
-
-        glDrawElements(GL_TRIANGLES,
-                       12, GL_UNSIGNED_INT,
-                       (void *) 0);
-
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-
-        bufferIndices = 0;
-        bufferVertices = 0;
-
-        uMatrix = glm::mat4(1.0f);
+	uMatrix = glm::mat4(1.0f);
 }

@@ -26,9 +26,9 @@ public:
 
 	bool startScreen = false;
 
-	Screen scr;
+	Screen screen;
 
-	Window wndw;
+	Window window;
 	Input input;
 
 	Player *thisPlayer;
@@ -36,7 +36,7 @@ public:
 
 	Renderer renderer;
 
-	Audio aud;
+	Audio audio;
 
 	Map map;
 
@@ -55,11 +55,10 @@ public:
 	std::chrono::system_clock::duration start_time;
 
 	bool multithreading = true;
-	bool loadShaders = true;
 
 	bool fileoutput = true;
 
-	FILE *outputfile = NULL;
+	FILE *outputfile = nullptr;
 
 	bool music = true;
 
@@ -72,8 +71,11 @@ public:
 	void refresh();
 
 	void main();
+
 	void gameRender();
+
 	void rendererUpdate();
+
 	void rendererReset();
 
 	void gameInput();

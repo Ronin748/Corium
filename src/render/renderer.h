@@ -13,207 +13,208 @@ const int BATCH_SIZE = GL_MAX_ELEMENTS_VERTICES;
 
 class Light {
 public:
-glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
-glm::vec3 col = glm::vec3(0.0f, 0.0f, 0.0f); // if col == (0, 0, 0) light is off
+	glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 col = glm::vec3(0.0f, 0.0f, 0.0f); // if col == (0, 0, 0) light is off
 
-GLuint depthMapFBO = -1;
-GLuint depthCubemap;
+	GLuint depthMapFBO = -1;
+	GLuint depthCubemap;
 
-GLuint w = 512;
-GLuint h = 512;
+	GLuint w = 512;
+	GLuint h = 512;
 
-void initShadows(GLuint new_w = 512, GLuint new_h = 512)
-{
-        if (depthMapFBO == -1) {
-                w = new_w;
-                h = new_h;
+	void initShadows(GLuint new_w = 512, GLuint new_h = 512)
+	{
+		if (depthMapFBO == -1) {
+			w = new_w;
+			h = new_h;
 
-                glGenFramebuffers(1, &depthMapFBO);
+			glGenFramebuffers(1, &depthMapFBO);
 
-                glGenTextures(1, &depthCubemap);
-                glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+			glGenTextures(1, &depthCubemap);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
 
-                for (GLuint i = 0; i < 6; ++i)
-                        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, w, h, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+			for (GLuint i = 0; i < 6; ++i)
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, w, h, 0, GL_DEPTH_COMPONENT,
+							 GL_FLOAT, 0);
 
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-                glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-                glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+			glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 
-                glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
-                /*glFramebufferTexture3D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,GL_TEXTURE_CUBE_MAP_NEGATIVE_X, depthCubemap, 0, 0);
-                   glFramebufferTexture3D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, depthCubemap, 0, 0);
-                   glFramebufferTexture3D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, depthCubemap, 0, 0);
+			glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
+			/*glFramebufferTexture3D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,GL_TEXTURE_CUBE_MAP_NEGATIVE_X, depthCubemap, 0, 0);
+			   glFramebufferTexture3D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, depthCubemap, 0, 0);
+			   glFramebufferTexture3D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, depthCubemap, 0, 0);
 
-                   glFramebufferTexture3D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,GL_TEXTURE_CUBE_MAP_POSITIVE_X, depthCubemap, 0, 0);
-                   glFramebufferTexture3D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,GL_TEXTURE_CUBE_MAP_POSITIVE_Y, depthCubemap, 0, 0);
-                   glFramebufferTexture3D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,GL_TEXTURE_CUBE_MAP_POSITIVE_Z, depthCubemap, 0, 0);*/
+			   glFramebufferTexture3D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,GL_TEXTURE_CUBE_MAP_POSITIVE_X, depthCubemap, 0, 0);
+			   glFramebufferTexture3D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,GL_TEXTURE_CUBE_MAP_POSITIVE_Y, depthCubemap, 0, 0);
+			   glFramebufferTexture3D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,GL_TEXTURE_CUBE_MAP_POSITIVE_Z, depthCubemap, 0, 0);*/
 
-                glDrawBuffer(GL_NONE);
-                glReadBuffer(GL_NONE);
-                if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-                        std::cout << "Framebuffer not complete!" << std::endl;
-                glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        }
-}
+			glDrawBuffer(GL_NONE);
+			glReadBuffer(GL_NONE);
+			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+				std::cout << "Framebuffer not complete!" << std::endl;
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
+	}
 
-void clearWith(float d)
-{
-        glBindBuffer(GL_FRAMEBUFFER, depthMapFBO);
+	void clearWith(float d)
+	{
+		glBindBuffer(GL_FRAMEBUFFER, depthMapFBO);
 
-        glClearDepth(d);
+		glClearDepth(d);
 
-        glClear(GL_DEPTH_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT);
 
-        glClearDepth(1.0f);         // set back to 1
-}
+		glClearDepth(1.0f);         // set back to 1
+	}
 
-~Light()
-{
-        //glDeleteTextures(1, &depthCubemap);
-        //glDeleteBuffers(1, &depthMapFBO);
-}
+	~Light()
+	{
+		//glDeleteTextures(1, &depthCubemap);
+		//glDeleteBuffers(1, &depthMapFBO);
+	}
 
-Light()
-{
+	Light()
+	{
 
-}
+	}
 };
 
 class Renderer {
 public:
-GLuint vertexArrayID;
-GLuint vertexBuffer;
-GLuint texBuffer;
-GLuint indexBuffer;
-GLuint normalBuffer;
-GLuint colBuffer;
+	GLuint vertexArrayID;
+	GLuint vertexBuffer;
+	GLuint texBuffer;
+	GLuint indexBuffer;
+	GLuint normalBuffer;
+	GLuint colBuffer;
 
-int vertices = 0;
+	int vertices = 0;
 
-Texture tex;
+	Texture texture;
 
-GLuint SCREEN_WIDTH = 512, SCREEN_HEIGHT = 300;
-float SCREEN_SCALE = 1.0f;
+	GLuint SCREEN_WIDTH = 512, SCREEN_HEIGHT = 300;
 
-float farPlane = 200.0f;
-glm::vec3 clearCol = glm::vec3(0.0f, 0.0f, 0.0f);
+	float farPlane = 200.0f;
+	glm::vec3 clearCol = glm::vec3(0.0f, 0.0f, 0.0f);
 
-int rfbo = 0; // render fbo, 0 internal, 1 screen
+	int rfbo = 0; // render fbo, 0 internal, 1 screen
 
-bool shadows = true; // enable shadows => col * ds
+	bool shadows = true; // enable shadows => col * ds
 
-float amb = 0.5f;
-float lght = 0.5f;
-float renderDist = 0.5f;
+	float amb = 0.5f;
+	float lit = 0.5f;
+	float renderDist = 0.5f;
 
-bool dithering = true;
+	bool dithering = true;
 
-bool drawLines = false;
+	bool drawLines = false;
 
-glm::vec3 camStart = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 camStart = glm::vec3(0.0f, 0.0f, 0.0f);
 
-glm::vec3 down = glm::vec3(0.0f, -1.0f, 0.0f);
+	glm::vec3 down = glm::vec3(0.0f, -1.0f, 0.0f);
 
-Shader psShader;
-Shader psShaderDepth;
-Shader quadShader;
+	Shader mainShader;
+	Shader depthShader;
+	Shader screenShader;
 
-GLuint screenTex;
-GLuint screenFBO;
+	GLuint screenTex;
+	GLuint screenFBO;
 
-GLuint screenDepthTex;
+	GLuint screenDepthTex;
 
-GLuint quadBuf;
-GLuint indBuf;
+	GLuint quadBuf;
+	GLuint indBuf;
 
-int MAX_LIGHTS = 8;
-int max_lights = 8;
+	int MAX_LIGHTS = 8;
+	int max_lights = 8;
 
-GLuint SHADOW_WIDTH = 512, SHADOW_HEIGHT = 512;
+	GLuint SHADOW_WIDTH = 512, SHADOW_HEIGHT = 512;
 
-glm::mat4 cMatrix = glm::mat4(1.0f);
-glm::mat4 pMatrix = glm::mat4(1.0f);
-glm::mat4 uMatrix = glm::mat4(1.0f);
+	glm::mat4 cMatrix = glm::mat4(1.0f);
+	glm::mat4 pMatrix = glm::mat4(1.0f);
+	glm::mat4 uMatrix = glm::mat4(1.0f);
 
-glm::vec3 camPos = glm::vec3(0.0f);
-glm::vec3 camRot = glm::vec3(0.0f);
-float camZ = 7.0f;
+	glm::vec3 camPos = glm::vec3(0.0f);
+	glm::vec3 camRot = glm::vec3(0.0f);
+	float camZ = 7.0f;
 
-float vertexArray[BATCH_SIZE];
-float texArray[BATCH_SIZE];
-float colArray[BATCH_SIZE];
-float normalArray[BATCH_SIZE];
-int indexArray[BATCH_SIZE];
+	float vertexArray[BATCH_SIZE];
+	float texArray[BATCH_SIZE];
+	float colArray[BATCH_SIZE];
+	float normalArray[BATCH_SIZE];
+	int indexArray[BATCH_SIZE];
 
-int batchesPerCycle = 0;
-int drawsPerCycle = 0;
+	int batchesPerCycle = 0;
+	int drawsPerCycle = 0;
 
-int bufferVertices = 0;
-int bufferIndices = 0;
+	int bufferVertices = 0;
+	int bufferIndices = 0;
 
-float xSpacing = 0.0f;
+	int w = 512;     // viewport dimensions
+	int h = 300;
 
-int w = 512;     // viewport dimensions
-int h = 300;
+	float fov = 1.5f;
 
-float fov = 1.5f;
+	float ticks = 0.0f;
 
-float ticks = 0.0f;
+	int light_i = 0;
 
-bool loadShaders = true;
+	std::vector<Light> lights;
 
-int light_i = 0;
+	void flushBatch();
 
-std::vector<Light> lights;
+	void flushBatchFBO();
 
-void flushBatch();
+	void clear() const;
 
-void flushBatchFBO();
+	void update();
 
-void clear();
+	void renderFBO();
 
-void update();
+	void add(Texture *tex, std::vector<float> *vertexData, std::vector<float> *normalData,
+			 std::vector<float> *texData,
+			 std::vector<float> *colData, std::vector<int> *indexData);
 
-void renderFBO();
+	void draw(Texture *tex, std::vector<float> *vertexData, std::vector<float> *normalData, std::vector<float> *texData,
+			  std::vector<float> *colData, std::vector<int> *indexData);
 
-void add(Texture* tex, std::vector<float> *vertexData, std::vector<float> *normalData,
-         std::vector<float> *texData,
-         std::vector<float> *colData, std::vector<int> *indexData);
+	void render(Texture *tex, glm::mat4 *objMatrix, std::vector<float> *vertexData, std::vector<float> *normalData,
+				std::vector<float> *texData,
+				std::vector<float> *colData, std::vector<int> *indexData);
 
-void draw(Texture* tex, std::vector<float> *vertexData, std::vector<float> *normalData, std::vector<float> *texData,
-          std::vector<float> *colData, std::vector<int> *indexData);
+	void flush();
 
-void render(Texture* tex, glm::mat4 *objMatrix, std::vector<float> *vertexData, std::vector<float> *normalData,
-            std::vector<float> *texData,
-            std::vector<float> *colData, std::vector<int> *indexData);
+	void flushUpdate();
 
-void flush();
+	void drawShadows(std::vector<float> *vertexData, std::vector<int> *indexData);
 
-void flushUpdate();
+	void renderShadows(glm::mat4 *objMatrix, std::vector<float> *vertexData, std::vector<int> *indexData);
 
-void drawShadows(std::vector<float> *vertexData, std::vector<int> *indexData);
-void renderShadows(glm::mat4 *objMatrix, std::vector<float> *vertexData, std::vector<int> *indexData);
-void flushShadows();
-void drawShadowMap();
-void addShadows(std::vector<float> *vertexData, std::vector<int> *indexData);
-void clearShadows();
+	void flushShadows();
 
-void drawLine(glm::vec3 l0, glm::vec3 l1);
+	void drawShadowMap();
 
-void init();
+	void addShadows(std::vector<float> *vertexData, std::vector<int> *indexData);
 
-void compileShaders();
+	void clearShadows();
 
-void destroyRenderer();
+	void drawLine(glm::vec3 l0, glm::vec3 l1);
 
-Renderer()
-{
-}
+	void init();
+
+	void compileShaders();
+
+	void destroyRenderer();
+
+	Renderer()
+	{
+	}
 };
 
 

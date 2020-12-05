@@ -10,83 +10,89 @@
 
 class Anim {
 public:
-std::vector<Mesh> frames;
-Mesh currentFrame;
+	std::vector<Mesh> frames;
+	Mesh currentFrame;
 
-Phys phys;
-Texture tex;
+	Phys phys;
+	Texture tex;
 
-// 0 = linear, 1 = sin, 2 = distance, 3 = bezier, 4 none
-int interpolation = 0;
+	// 0 = linear, 1 = sin, 2 = distance, 3 = bezier, 4 none
+	int interpolation = 0;
 
-float spd = 0.05f;
-float ticks = 0.0f;
+	float spd = 0.05f;
+	float ticks = 0.0f;
 
-int thisFrame = 0;
-int previousFrame = 0;
-int nextFrame = 0;
+	int thisFrame = 0;
+	int previousFrame = 0;
+	int nextFrame = 0;
 
-int thisIndex = 0;
-int previousIndex = 0;
-int nextIndex = 0;
+	int thisIndex = 0;
+	int previousIndex = 0;
+	int nextIndex = 0;
 
-std::vector<int> frameIndex;
+	std::vector<int> frameIndex;
 
-void draw(Renderer *renderer);
-void render(Renderer *renderer);
+	void draw(Renderer *renderer);
 
-void drawShadows(Renderer* renderer);
+	void render(Renderer *renderer);
 
-void setAnim(float spd, std::vector<int> fi, bool immediate = false);
+	void drawShadows(Renderer *renderer);
 
-void setSpd(float newSpd);
+	void setAnim(float spd, std::vector<int> fi, bool immediate = false);
 
-bool finished();
+	void setSpd(float newSpd);
 
-void renderShadows(Renderer *renderer);
+	bool finished();
 
-void tick(float s = -1.0f);
+	void renderShadows(Renderer *renderer);
 
-void loadAnim(std::string path, std::string texpath, int numFrames, std::vector<int> frameI = {});
+	void tick(float s = -1.0f);
 
-void addFrame(Mesh *newFrame);
+	void loadAnim(std::string path, std::string texpath, int numFrames, std::vector<int> frameI = {});
 
-void resetFrames();
+	void addFrame(Mesh *newFrame);
 
-void clearFrames();
+	void resetFrames();
 
-Anim() {
-}
+	void clearFrames();
+
+	Anim()
+	{
+	}
 };
 
 class Anims {
 public:
-Mesh animFrame;
-Mesh templateFrame;     // newFrame += template - frame1; newFrame += template - frame2; newFrame += template;
+	Mesh animFrame;
+	Mesh templateFrame;     // newFrame += template - frame1; newFrame += template - frame2; newFrame += template;
 
-Texture tex;
-Phys phys;
+	Texture tex;
+	Phys phys;
 
-std::vector<Anim> anims;
-std::vector<bool> animRunning;
+	std::vector<Anim> anims;
+	std::vector<bool> animRunning;
 
-void draw(Renderer *renderer);
-void render(Renderer *renderer);
+	void draw(Renderer *renderer);
 
-void drawShadows(Renderer *renderer);
-void renderShadows(Renderer *renderer);
+	void render(Renderer *renderer);
 
-void addAnim(std::string path, int numFrames, float spd, std::vector<int> frameI = {});
-void loadTemplate(std::string path, std::string texpath);
-void clearAnims();
+	void drawShadows(Renderer *renderer);
 
-void resetStates();
+	void renderShadows(Renderer *renderer);
 
-void tick();
+	void addAnim(std::string path, int numFrames, float spd, std::vector<int> frameI = {});
 
-Anims()
-{
-}
+	void loadTemplate(std::string path, std::string texpath);
+
+	void clearAnims();
+
+	void resetStates();
+
+	void tick();
+
+	Anims()
+	{
+	}
 };
 
 #endif //CORIUM_ANIM_H

@@ -11,14 +11,14 @@
 template<typename T>
 std::string toString(const T &n)
 {
-        std::ostringstream stm;
-        stm << n;
-        return stm.str();
+	std::ostringstream stm;
+	stm << n;
+	return stm.str();
 }
 
 std::string toString(glm::vec3 v)
 {
-        return "(" + toString(v[0]) + ", " + toString(v[1]) + ", " + toString(v[2]) + ")";
+	return "(" + toString(v[0]) + ", " + toString(v[1]) + ", " + toString(v[2]) + ")";
 }
 
 #endif //CORIUM_TOSTRING_H

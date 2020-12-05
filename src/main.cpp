@@ -1,5 +1,5 @@
 #include "game/game.h"
-#include "util/coriumlang.h"
+#include "util/coriumLang.h"
 
 Game game;
 
@@ -7,28 +7,28 @@ Game game;
 
 void gamePrint(std::string s)
 {
-        game.print(s);
+	game.print(s);
 }
 
 void gameRefresh()
 {
-        game.refresh();
+	game.refresh();
 }
 
 void gameScript(std::string s)
 {
-        runScript(s, &game);
+	runScript(s, &game);
 }
 
 void gameDrawLine(glm::vec3 l0, glm::vec3 l1)
 {
-        game.renderer.drawLine(l0, l1);
+	game.renderer.drawLine(l0, l1);
 }
 
 int main(int argc, char *argv[])
 {
-        game.init(); // initializes engine and loads game assets
-        game.start(); // launches main game loop
+	game.init(); // initializes engine and loads game assets
+	game.start(); // launches main game loop
 
-        return 0;
+	return 0;
 }

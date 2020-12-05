@@ -6,23 +6,23 @@
 #define CORIUM_GUI_H
 
 #include "quad.h"
-#include "render/screenRenderer.h"
+#include "render/guiRenderer.h"
 
 class GUI {
 public:
-Quad crosshair;
+	Quad crosshair;
 
-Quad hurt;
+	Quad hurt;
 
-float ticks = 0.0f;
+	float ticks = 0.0f;
 
-void drawGUI(ScreenRenderer *scrRndr);
+	void drawGUI(GUIRenderer *guiRenderer);
 
-void loadGUI();
+	void loadGUI();
 
-GUI()
-{
-}
+	GUI()
+	{
+	}
 };
 
 #endif //CORIUM_GUI_H

@@ -9,51 +9,52 @@
 
 class Entity : public Obj {
 public:
-float health = 100.0f;
+	float health = 100.0f;
 
-bool colliding = false;
+	bool colliding = false;
 
-bool onGround = true;
+	bool onGround = true;
 
-float ticks = 0.0f;
+	float ticks = 0.0f;
 
-bool sprinting = false;
+	bool sprinting = false;
 
-bool hurt = false;
+	bool hurt = false;
 
-bool jumping = false;
+	bool jumping = false;
 
-bool moving = false;
+	bool moving = false;
 
-float spd = 1.0f;
+	float spd = 1.0f;
 
 // find this in world tick (probably player)
-Entity *closestEnemy = NULL;
+	Entity *closestEnemy = NULL;
 
-float chaseRange = 8.0f;
-float attackRange = 1.0f;
+	float chaseRange = 8.0f;
+	float attackRange = 1.0f;
 
 // ai thinks
-void think();
+	void think();
 
 // entity movement, otherwise idle
-void chase(Entity *another);
+	void chase(Entity *another);
 
 // he attacc
-void attack(Entity *another);
+	void attack(Entity *another);
 
 // bounce up and down or whatever
-void idle();
+	void idle();
 
-void draw(Renderer *renderer);
-void drawShadows(Renderer *renderer);
+	void draw(Renderer *renderer);
 
-void tick();
+	void drawShadows(Renderer *renderer);
 
-Entity() : Obj()
-{
+	void tick();
 
-}
+	Entity() : Obj()
+	{
+
+	}
 };
 
 #endif //CORIUM_ENTITY_H

@@ -10,6 +10,7 @@
 class Input {
 public:
 	void getKeys(GLFWwindow *window);
+
 	void getMouse(GLFWwindow *window);
 
 	std::vector<bool> keyDown;
@@ -31,7 +32,7 @@ public:
 
 	int ticks;
 
-	GLFWwindow* thisWindow;
+	GLFWwindow *thisWindow;
 
 	// TODO: control configs
 	int UP = 0;
@@ -43,22 +44,22 @@ public:
 
 	Input()
 	{
-        winFocus = true;
-        focused = false;
+		winFocus = true;
+		focused = false;
 
-        mouseSpd = 1.0;
+		mouseSpd = 1.0;
 
-        keyDown.resize(256);
-        keyPressed.resize(256);
-        mouseDown.resize(3);
+		keyDown.resize(256);
+		keyPressed.resize(256);
+		mouseDown.resize(3);
 
-        mousePos = glm::vec2(0.0f, 0.0f);
+		mousePos = glm::vec2(0.0f, 0.0f);
 
-        ticks = 0;
+		ticks = 0;
 
-        std::fill(keyDown.begin(), keyDown.end(), false);
-        std::fill(keyPressed.begin(), keyPressed.end(), false);
-        std::fill(mouseDown.begin(), mouseDown.end(), false);
+		std::fill(keyDown.begin(), keyDown.end(), false);
+		std::fill(keyPressed.begin(), keyPressed.end(), false);
+		std::fill(mouseDown.begin(), mouseDown.end(), false);
 	}
 };
 
