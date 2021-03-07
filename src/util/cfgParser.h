@@ -64,7 +64,6 @@ void loadSettings(std::string path, Game *game)
 			game->renderer.MAX_LIGHTS = atoi(words[i + 1].c_str());
 		}
 		if (expr(words, i, 2, "_MULTITHREADING")) {
-			game->multithreading = (bool) atof(words[i + 1].c_str());
 			game->map.sys.multithreading = (bool) atof(words[i + 1].c_str());
 		}
 		if (expr(words, i, 2, "_MUSIC")) {
@@ -77,13 +76,13 @@ void loadSettings(std::string path, Game *game)
 			game->map.sys.fd = !((bool) atoi(words[i + 1].c_str()));
 		}
 		if (expr(words, i, 2, "_FILEOUTPUT")) {
-			game->fileoutput = (bool) atof(words[i + 1].c_str());
+			game->fileOutput = (bool) atof(words[i + 1].c_str());
 		}
 		if (expr(words, i, 2, "_DRAWLINES")) {
 			game->renderer.drawLines = (bool) atof(words[i + 1].c_str());
 		}
 		if (expr(words, i, 2, "_FULLSCREEN")) {
-			game->startFullScr = (bool) atof(words[i + 1].c_str());
+			game->startFullscreen = (bool) atof(words[i + 1].c_str());
 		}
 		if (expr(words, i, 2, "_STARTSCREEN")) {
 			game->startScreen = (bool) atof(words[i + 1].c_str());

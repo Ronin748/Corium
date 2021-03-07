@@ -22,13 +22,13 @@ public:
 	float air_resistance = 0.1f;
 	float friction = 0.1f;
 
-	float bouncyness = 0.15f;         // 0.17
+	float bounciness = 0.15f;         // 0.17
 
 	std::mutex mtx;
 
 	int collisions = 0;
 
-// fully dynamic
+	// fully dynamic
 	bool fd = true;
 
 	void updateObjs(int i_min, int i_max, int j_min, int j_max);

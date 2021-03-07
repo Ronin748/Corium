@@ -4,30 +4,8 @@
 
 #include "renderer.h"
 
-void Renderer::destroyRenderer()
-{
-	screenShader.destroyShader();
-	mainShader.destroyShader();
-	depthShader.destroyShader();
-
-	glDeleteBuffers(1, &vertexBuffer);
-	glDeleteBuffers(1, &texBuffer);
-	glDeleteBuffers(1, &colBuffer);
-	glDeleteBuffers(1, &normalBuffer);
-	glDeleteBuffers(1, &indexBuffer);
-	glDeleteBuffers(1, &quadBuf);
-	glDeleteBuffers(1, &indBuf);
-
-	glDeleteVertexArrays(1, &vertexArrayID);
-	glDeleteTextures(1, &screenTex);
-	glDeleteTextures(1, &screenDepthTex);
-	glDeleteFramebuffers(1, &screenFBO);
-}
-
 void Renderer::compileShaders()
 {
-	mainShader.max_lights = MAX_LIGHTS;
-
 	screenShader.init(screenShader.vertPath, screenShader.fragPath);
 	mainShader.init(mainShader.vertPath, mainShader.fragPath);
 
@@ -38,7 +16,7 @@ void Renderer::compileShaders()
 
 void Renderer::init()
 {
-	max_lights = MAX_LIGHTS;
+	lightNum = MAX_LIGHTS;
 	lights.resize(MAX_LIGHTS);
 
 	compileShaders();
@@ -59,9 +37,6 @@ void Renderer::init()
 	glDisable(GL_STENCIL_TEST);
 	glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-//    glUniform1i(glGetUniformLocation(mainShader.program, "diffuseTexture"), 0);
-//    glUniform1i(glGetUniformLocation(mainShader.program, "depthMap"), 1);
 
 	for (int l = 0; l < MAX_LIGHTS; ++l)
 		lights[l].initShadows(SHADOW_WIDTH, SHADOW_HEIGHT);
@@ -93,14 +68,11 @@ void Renderer::init()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SCREEN_WIDTH, SCREEN_HEIGHT,
 				 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
 
-	gamePrint("st " + toString(screenTex) + "\n");
-	gamePrint("sd t " + toString(screenDepthTex) + "\n");
+	gamePrint("screenTex " + toString(screenTex) + "\n");
+	gamePrint("screenDepthTex " + toString(screenDepthTex) + "\n");
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenTex, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, screenDepthTex, 0);
-
-	// glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, screenTex, 0);
-	// glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, screenDepthTex, 0);
 
 	GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
 	glDrawBuffers(1, DrawBuffers);
@@ -129,15 +101,12 @@ void Renderer::update()
 	clear();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, screenFBO);
-
 	clear();
 
 	cMatrix = glm::mat4(1.0f);
 	pMatrix = glm::mat4(1.0f);
 
 	pMatrix = glm::perspective(fov, (float) w / (float) h, 0.05f, farPlane);
-
-	//glViewport(0, 0, current_w, current_h);
 
 	cMatrix = glm::translate(cMatrix, glm::vec3(0.0f, 0.0f, -camZ)); // for 3rd person
 
@@ -212,19 +181,11 @@ void Renderer::flushUpdate()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_SRC_ALPHA);
-	//glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
 
-	//glDepthFunc(GL_LEQUAL); // changed from GL_LESS
 	glDepthFunc(GL_LESS);
 	glCullFace(GL_BACK);
 
-	glUniform2fv(glGetUniformLocation(mainShader.program, "ws"), 1,
-				 &(glm::vec2((float) SCREEN_WIDTH, (float) SCREEN_HEIGHT))[0]);
-
 	glUniform1f(glGetUniformLocation(mainShader.program, "farPlane"), farPlane);
-
-	glUniform1f(glGetUniformLocation(mainShader.program, "dither"), (float) dithering);
 
 	GLuint sampleTex = glGetUniformLocation(mainShader.program, "diffuseTexture");
 	glActiveTexture(GL_TEXTURE0);
@@ -235,20 +196,20 @@ void Renderer::flushUpdate()
 	glUniform2fv(glGetUniformLocation(mainShader.program, "al"), 1, &(glm::vec2(this->amb, this->lit))[0]);
 
 
-	for (int l = 0; l < max_lights; ++l) {
+	for (int l = 0; l < lightNum; ++l) {
 		glUniform3fv(glGetUniformLocation(mainShader.program, ("lights[" + toString(l) + "].pos").c_str()), 1,
 					 (const float *) glm::value_ptr(lights[l].pos));
 		glUniform3fv(glGetUniformLocation(mainShader.program, ("lights[" + toString(l) + "].col").c_str()), 1,
 					 &(lights[l].col * ((float) shadows))[0]);
 
-		GLuint depthTex = glGetUniformLocation(mainShader.program, ("depthMap[" + toString(l) + "]").c_str());
+		GLuint depthTex = glGetUniformLocation(mainShader.program, ("lights[" + toString(l) + "].depthMap").c_str());
 
 		glActiveTexture((GLenum) (GL_TEXTURE1 + l));
 		glBindTexture(GL_TEXTURE_CUBE_MAP, lights[l].depthCubemap);
 		glUniform1i(depthTex, 1 + l);
 	}
 
-	glUniform1i(glGetUniformLocation(mainShader.program, "max_lights"), max_lights);
+	glUniform1i(glGetUniformLocation(mainShader.program, "lightNum"), lightNum);
 
 	glUniformMatrix4fv(glGetUniformLocation(mainShader.program, "proj"), 1, GL_FALSE, glm::value_ptr(pMatrix));
 	glUniformMatrix4fv(glGetUniformLocation(mainShader.program, "view"), 1, GL_FALSE, glm::value_ptr(cMatrix));
@@ -553,6 +514,7 @@ void Renderer::addShadows(std::vector<float> *vertexData, std::vector<int> *inde
 void Renderer::flushShadows()
 {
 	uMatrix = glm::mat4(1.0f);
+
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, bufferVertices * sizeof(float), vertexArray, GL_DYNAMIC_DRAW);
 
@@ -581,7 +543,7 @@ void Renderer::renderShadows(glm::mat4 *objMatrix, std::vector<float> *vertexDat
 
 void Renderer::clearShadows()
 {
-	for (int l = 0; l < max_lights; ++l) {
+	for (int l = 0; l < lightNum; ++l) {
 		glBindFramebuffer(GL_FRAMEBUFFER, lights[l].depthMapFBO);
 		clear();
 	}
@@ -589,8 +551,6 @@ void Renderer::clearShadows()
 
 void Renderer::drawShadowMap()
 {
-	//++batchesPerCycle; // count shadows too?
-
 	GLfloat aspect = ((GLfloat) SHADOW_WIDTH) / ((GLfloat) SHADOW_HEIGHT);
 	GLfloat near = 0.3f;
 	GLfloat far = farPlane;
@@ -613,7 +573,7 @@ void Renderer::drawShadowMap()
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-	for (light_i = 0; light_i < max_lights; ++light_i) {
+	for (light_i = 0; light_i < lightNum; ++light_i) {
 		std::vector<glm::mat4> shadowTransforms;
 		shadowTransforms.push_back(
 				shadowProj * glm::lookAt(lights[light_i].pos, lights[light_i].pos + glm::vec3(1.0, 0.0, 0.0),
@@ -697,6 +657,9 @@ void Renderer::renderFBO()
 
 	glBindTexture(GL_TEXTURE_2D, screenTex);
 
+	glUniform1f(glGetUniformLocation(screenShader.program, "dither"), (float) dithering);
+	glUniform2fv(glGetUniformLocation(screenShader.program, "ratio"), 1, &(glm::vec2((float) SCREEN_WIDTH / (float) w, (float) SCREEN_HEIGHT / (float) h))[0]);
+
 	glBindBuffer(GL_ARRAY_BUFFER, quadBuf);
 	glBufferData(GL_ARRAY_BUFFER, 4 * 4 * 2 * sizeof(float), verts, GL_DYNAMIC_DRAW);
 
@@ -742,4 +705,24 @@ void Renderer::renderFBO()
 	bufferVertices = 0;
 
 	uMatrix = glm::mat4(1.0f);
+}
+
+void Renderer::destroyRenderer()
+{
+	screenShader.destroyShader();
+	mainShader.destroyShader();
+	depthShader.destroyShader();
+
+	glDeleteBuffers(1, &vertexBuffer);
+	glDeleteBuffers(1, &texBuffer);
+	glDeleteBuffers(1, &colBuffer);
+	glDeleteBuffers(1, &normalBuffer);
+	glDeleteBuffers(1, &indexBuffer);
+	glDeleteBuffers(1, &quadBuf);
+	glDeleteBuffers(1, &indBuf);
+
+	glDeleteVertexArrays(1, &vertexArrayID);
+	glDeleteTextures(1, &screenTex);
+	glDeleteTextures(1, &screenDepthTex);
+	glDeleteFramebuffers(1, &screenFBO);
 }

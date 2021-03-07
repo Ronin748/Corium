@@ -55,26 +55,20 @@ inline bool Map::inRange(glm::vec3 bsc, float bsr)
 
 void Map::drawShadows(Renderer *renderer)
 {
-	for (int i = 0; i < environs.size(); ++i) {
-		if (environs[i].rendered && environs[i].shadows && inRange(&environs[i])) {
-			environs[i].drawShadows(renderer);
+	for (auto &environ : environs) {
+		if (environ.rendered && environ.shadows && inRange(&environ)) {
+			environ.drawShadows(renderer);
 		}
 	}
 
-	for (int i = 0; i < objs.size(); ++i) {
-		if (objs[i].rendered && objs[i].shadows && inRange(&objs[i]) &&
-			(shadowsEnabled || objs[i].phys.isStatic)) {
-			objs[i].drawShadows(renderer);
+	for (auto &obj : objs) {
+		if (obj.rendered && obj.shadows && inRange(&obj) &&
+			(shadowsEnabled || obj.phys.isStatic)) {
+			obj.drawShadows(renderer);
 		}
 	}
 
 	// GAME OBJECTS HERE
-	for (int i = 0; i < crabs.size(); ++i) {
-		if (crabs[i].rendered && crabs[i].shadows && inRange(&crabs[i]) &&
-			(shadowsEnabled || crabs[i].phys.isStatic)) {
-			crabs[i].drawShadows(renderer);
-		}
-	}
 
 	if (shadowsEnabled) {
 		thisPlayer->drawShadows(renderer);
@@ -85,14 +79,13 @@ void Map::drawShadows(Renderer *renderer)
 
 void Map::drawObjs(Renderer *renderer)
 {
-	for (int i = 0; i < objs.size(); ++i)
-		objs[i].draw(renderer);
+	for (auto &obj : objs)
+		obj.draw(renderer);
 
-	for (int i = 0; i < environs.size(); ++i)
-		environs[i].draw(renderer);
+	for (auto &environ : environs)
+		environ.draw(renderer);
 
 	// GAME OBJECTS HERE
-	crabs.back().draw(renderer);
 
 	thisPlayer->draw(renderer);
 
@@ -100,7 +93,7 @@ void Map::drawObjs(Renderer *renderer)
 
 	if (sky.rendered) {
 		renderer->shadows = false;
-		renderer->farPlane *= skyplane;
+		renderer->farPlane *= skyPlane;
 		float ramb = renderer->amb;
 		float rlght = renderer->lit;
 		renderer->amb = 1.0f;
@@ -110,7 +103,7 @@ void Map::drawObjs(Renderer *renderer)
 		sky.draw(renderer);
 		renderer->flushBatch();
 
-		renderer->farPlane /= skyplane;
+		renderer->farPlane /= skyPlane;
 		renderer->amb = ramb;
 		renderer->lit = rlght;
 		renderer->shadows = true;
@@ -120,21 +113,21 @@ void Map::drawObjs(Renderer *renderer)
 
 void Map::bakeShadows()
 {
-	renderer->max_lights = 1;
+	renderer->lightNum = 1;
 
-	for (int i = 0; i < lights.size(); ++i) {
-		lights[i].initShadows();
+	for (auto &light : lights) {
+		light.initShadows();
 
-		renderer->lights[0] = lights[i];
+		renderer->lights[0] = light;
 
 		renderer->clearShadows();
 
 		drawShadows(renderer);
 
-		lights[i] = renderer->lights[0];
+		light = renderer->lights[0];
 	}
 
-	renderer->max_lights = renderer->MAX_LIGHTS;
+	renderer->lightNum = renderer->MAX_LIGHTS;
 }
 
 void Map::draw(Renderer *renderer)
@@ -174,24 +167,22 @@ void Map::mapParser()
 
 void Map::update()
 {
-	for (int i = 0; i < player.size(); ++i) {
-		player[i].update();
-		player[i].ticks = ticks;
+	for (auto &i : player) {
+		i.update();
+		i.ticks = ticks;
 	}
 
 	sky.phys.pos = thisPlayer->renderPos;
 	sky.phys.rot.y += 0.005f;
 	sky.update();
 
-	for (int i = 0; i < objs.size(); ++i)
-		visible(&objs[i]);
+	for (auto &obj : objs)
+		visible(&obj);
 
-	for (int i = 0; i < environs.size(); ++i)
-		visible(&environs[i]);
+	for (auto &environ : environs)
+		visible(&environ);
 
 	// GAME OBJECTS here
-	crabs.back().closestEnemy = thisPlayer;
-	crabs.back().tick();
 
 	clearLights(renderer);
 	findLights();
@@ -209,9 +200,9 @@ void Map::tickPhysics()
 {
 	sys.field = gravity;
 
-	if (physicsEnabled && physadded) {
+	if (physicsEnabled && physAdded) {
 		sys.update();
 	}
 
-	if (!thisPlayer->flying && physadded) thisPlayer->collide(&sys);
+	if (!thisPlayer->flying && physAdded) thisPlayer->collide(&sys);
 }

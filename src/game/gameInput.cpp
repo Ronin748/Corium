@@ -10,7 +10,7 @@ bool thrown = false;
 bool rightPress = false;
 float dist = 2.0f;
 
-bool restartpressed = false;
+bool restartPressed = false;
 
 bool flyingPressed = false;
 
@@ -96,7 +96,6 @@ void Game::gameInput()
 	}
 
 	if (glfwGetKey(window.window, GLFW_KEY_ESCAPE) && !window.fullscreen) {
-		//running = false;
 		input.focused = false;
 		glfwSetInputMode(window.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
@@ -108,9 +107,6 @@ void Game::gameInput()
 											   thisPlayer->renderPos.z + dist * cos(-thisPlayer->phys.rot.y + M_PI));
 		map.objs[grabbed].phys.rot.y = -thisPlayer->phys.rot.y;
 		map.objs[grabbed].phys.v = thisPlayer->phys.v - thisPlayer->phys.rotV + map.gravity;
-
-		//map.objs[grabbed].mesh.phys.update();
-		//map.objs[grabbed].mesh.update();
 	}
 
 	int count;
@@ -144,9 +140,6 @@ void Game::gameInput()
 												   thisPlayer->renderPos.z +
 												   dist * cos(-thisPlayer->phys.rot.y + M_PI));
 			map.objs[grabbed].phys.rot.y = -thisPlayer->phys.rot.y;
-			/*map.objs[grabbed].phys.v = glm::vec3(dist * sin(-thisPlayer->phys.rot.y + M_PI),
-												 dist * sin(thisPlayer->phys.rot.x + M_PI),
-												 dist * cos(-thisPlayer->phys.rot.y + M_PI))*/;
 
 			map.objs[grabbed].phys.v = map.gravity;
 			map.objs[grabbed].phys.v +=
@@ -182,8 +175,6 @@ void Game::gameInput()
 					path = "gfx/models/tetra.obj";
 					break;
 				case 1:
-					path = "gfx/models/cube.obj";
-					break;
 				case 2:
 					path = "gfx/models/cube.obj";
 					break;
@@ -194,7 +185,6 @@ void Game::gameInput()
 					path = "gfx/models/tetra.obj";
 					break;
 			}
-			//path = "gfx/models/cube.obj";
 			++meshNo;
 			if (meshNo > 3) meshNo = 0;
 
@@ -226,14 +216,13 @@ void Game::gameInput()
 															 dist * sin(thisPlayer->phys.rot.x + M_PI),
 															 dist * cos(-thisPlayer->phys.rot.y + M_PI)) * 0.05f;
 			input.keyPressed[GLFW_KEY_C] = false;
-			//map.addPhysObjects();
-			map.physadded = false;
+			map.physAdded = false;
 		}
 	} else {
 		input.keyPressed[GLFW_KEY_C] = true;
-		if (!map.physadded) {
+		if (!map.physAdded) {
 			map.addPhysObjects();
-			map.physadded = true;
+			map.physAdded = true;
 		}
 	}
 
@@ -260,9 +249,9 @@ void Game::gameInput()
 		grabbed = map.objs.size() - 1;
 	}
 
-	if (input.keyDown[GLFW_KEY_U]) { // MASSIVE MEMORY LEAK!
-		if (restartpressed) {
-			restartpressed = false;
+	if (input.keyDown[GLFW_KEY_U]) {
+		if (restartPressed) {
+			restartPressed = false;
 			rendererReset();
 		}
 	}
@@ -270,12 +259,11 @@ void Game::gameInput()
 		loadGameCfg();
 	}
 	if (input.keyDown[GLFW_KEY_T]) {
-		if (restartpressed) {
-			restartpressed = false;
+		if (restartPressed) {
+			restartPressed = false;
 			map.restart();
-			//map.gen.generate();
 		}
 	} else {
-		restartpressed = true;
+		restartPressed = true;
 	}
 }

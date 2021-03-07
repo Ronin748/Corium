@@ -27,22 +27,22 @@ public:
 
 	float spd = 1.0f;
 
-// find this in world tick (probably player)
+	// find this in world tick (probably player)
 	Entity *closestEnemy = NULL;
 
 	float chaseRange = 8.0f;
 	float attackRange = 1.0f;
 
-// ai thinks
+	// ai thinks
 	void think();
 
-// entity movement, otherwise idle
+	// entity movement, otherwise idle
 	void chase(Entity *another);
 
-// he attacc
+	// he attacc
 	void attack(Entity *another);
 
-// bounce up and down or whatever
+	// bounce up and down or whatever
 	void idle();
 
 	void draw(Renderer *renderer);

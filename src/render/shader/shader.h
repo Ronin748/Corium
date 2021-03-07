@@ -19,8 +19,6 @@ public:
 	std::string gsPath;
 	std::string fragPath;
 
-	int max_lights = 8;
-
 	GLuint loadShaders(std::string vp, std::string fp);
 
 	GLuint loadGS(std::string vp, std::string gp, std::string fp);

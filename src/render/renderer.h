@@ -115,10 +115,6 @@ public:
 
 	bool drawLines = false;
 
-	glm::vec3 camStart = glm::vec3(0.0f, 0.0f, 0.0f);
-
-	glm::vec3 down = glm::vec3(0.0f, -1.0f, 0.0f);
-
 	Shader mainShader;
 	Shader depthShader;
 	Shader screenShader;
@@ -132,7 +128,7 @@ public:
 	GLuint indBuf;
 
 	int MAX_LIGHTS = 8;
-	int max_lights = 8;
+	int lightNum = 8;
 
 	GLuint SHADOW_WIDTH = 512, SHADOW_HEIGHT = 512;
 

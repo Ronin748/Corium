@@ -9,8 +9,10 @@ _BEGIN;
 		_PRINT "loading chunk %";
 		
 		_MAP; # map commands
-			_OBJECT "gfx/hurricoschunks/hurricos.%.obj" NULL "gfx/Hurricos.png"
-				(0.0f, 0.0f, 0.0f) (0.0f, 0.0f, 0.0f) (15.0f, 15.0f, 15.0f) true true;
+                _OBJECT
+					"maps/hurricos/chunks/hurricos.%.obj" NULL "gfx/Hurricos.png"
+					(0.0f, 0.0f, 0.0f) (0.0f, 0.0f, 0.0f) (17.0f, 17.0f, 17.0f)
+					true true;
 		_ENDMAP;
 	_ENDLOOP;
 _END;

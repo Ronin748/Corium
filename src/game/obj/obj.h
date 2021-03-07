@@ -40,6 +40,8 @@ public:
 
 	void loadObject(std::string sp, std::string tp, std::string pp = "");
 
+	void destroyObject();
+
 	Obj()
 	{
 	}

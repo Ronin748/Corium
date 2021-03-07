@@ -45,15 +45,11 @@ void mapCmd(std::vector<std::string> words, int i, Map *map)
 		map->sky.phys.isStatic = true;
 		map->sky.rendered = true;
 		map->sky.ro = false; // true
-		map->skyplane = atof(&p[0]);
+		map->skyPlane = atof(&p[0]);
 	}
 	if (expr(words, i, 2, "_RENDER_DIST")) {
 		std::string s = words[i + 1];
 		map->renderer->renderDist = atof(&s[0]);
-	}
-	if (expr(words, i, 2, "_MASS")) {
-		std::string s = words[i + 1];
-		map->newobjmass = atof(&s[0]);
 	}
 	if (expr(words, i, 2, "_AMB")) {
 		std::string s = words[i + 1];

@@ -1,3 +1,6 @@
 doc
 CMakeFiles
 CMakeCache.txt
+lib/win
+lib/linux
+lib/include

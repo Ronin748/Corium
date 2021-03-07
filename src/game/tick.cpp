@@ -7,7 +7,7 @@
 void Game::tick()
 {
 	++ticks;
-	++game_ticks;
+	++gameTicks;
 	renderer.ticks += 1.0f;
 	map.ticks += 1.0f;
 	screen.ticks += 1.0f;

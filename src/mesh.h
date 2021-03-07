@@ -29,10 +29,7 @@ public:
 	float bsRadius = 1.0f;
 	glm::vec3 bsCenter = glm::vec3(0.0f);
 
-	glm::vec3 velocity = glm::vec3(0.0f);
 	int staticity = 1;
-
-	bool isIntersecting = false;
 
 	glm::mat4 objMatrix = glm::mat4(1.0f);
 
@@ -42,7 +39,7 @@ public:
 
 	void getNormals();
 
-// bounding sphere intersection test
+	// bounding sphere intersection test
 	bool bsIsect(Mesh *another);
 
 	void getBoundingSphere();

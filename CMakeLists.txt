@@ -8,6 +8,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -pthread -O3")
 # FIND OPENGL #
 ###############
 
+set(OpenGL_GL_PREFERENCE "GLVND")
 find_package(OpenGL REQUIRED)
 include_directories(${OpenGL_INCLUDE_DIRS})
 link_directories(${OpenGL_LIBRARY_DIRS})
@@ -16,14 +17,11 @@ if(NOT OPENGL_FOUND)
     message(ERROR " OPENGL not found!")
 endif(NOT OPENGL_FOUND)
 
-# Set Win32 settings
-IF(WIN32)
-SET(GUI_TYPE WIN32)
-ENDIF(WIN32)
-# Set MacOS settings
-IF (APPLE)
-SET(GUI_TYPE MACOSX_BUNDLE)
-ENDIF (APPLE)
+# Set Windows settings
+if(WIN32)
+    set(CMAKE_CXX_FLAGS "-m32") # 32 bit for windows
+    set(GUI_TYPE WIN32)
+endif(WIN32)
 
 set(CMAKE_SKIP_BUILD_PATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)

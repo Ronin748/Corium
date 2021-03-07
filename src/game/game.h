@@ -43,8 +43,8 @@ public:
 	int ticks = 0;
 	int fps = 0;
 
-	int frame_ticks = 0;
-	int game_ticks = 0;
+	int frameTicks = 0;
+	int gameTicks = 0;
 
 	bool ticking = false; // is game doing tick cycle?
 
@@ -52,17 +52,15 @@ public:
 	float tickTime = 0.0f;
 
 	std::chrono::high_resolution_clock timer;
-	std::chrono::system_clock::duration start_time;
+	std::chrono::system_clock::duration startTime;
 
-	bool multithreading = true;
+	bool fileOutput = true;
 
-	bool fileoutput = true;
-
-	FILE *outputfile = nullptr;
+	FILE *outputFile = nullptr;
 
 	bool music = true;
 
-	bool startFullScr = false;
+	bool startFullscreen = false;
 
 	void init();
 
@@ -86,7 +84,7 @@ public:
 
 	void tick();
 
-	std::vector<std::string> text_buffer;
+	std::vector<std::string> textBuffer;
 
 	void print(std::string s);
 

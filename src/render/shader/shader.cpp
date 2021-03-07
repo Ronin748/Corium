@@ -11,18 +11,8 @@ std::string Shader::readShaderSource(std::string path)
 	std::fstream stream(path, std::ios::in);
 	if (stream.is_open()) {
 		std::string line;
-		while (getline(stream, line)) { // awful custom shader macros
-			if (line.find("#define MAX_LIGHTS CORIUM_LIGHTNUM") != std::string::npos) {
-				code += "\n" + toString("#define MAX_LIGHTS ") + toString(max_lights);
-			} else if (line.find("CORIUM_TEXTURE_DEPTHMAP") != std::string::npos) {
-				for (int l = 0; l < max_lights; ++l) {
-					code += "\n" + toString("if (light_i == ") +
-							toString(l) + toString(") closestDepth = texture(depthMap[") +
-							toString(l) + toString("], fragToLight).r;\n");
-				}
-			} else {
-				code += "\n" + line;
-			}
+		while (getline(stream, line)) { // custom macros used to be here
+			code += "\n" + line;
 		}
 		stream.close();
 	}

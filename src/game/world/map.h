@@ -38,9 +38,9 @@ public:
 	Player *thisPlayer;
 	int playerID;
 
-	std::string mapPath = "";
+	std::string mapPath;
 
-	std::string mapName = "";
+	std::string mapName;
 
 	float ticks = 0.0f;
 
@@ -54,7 +54,7 @@ public:
 
 	Sys sys;
 	bool physicsEnabled = true;
-	bool physadded = false;
+	bool physAdded = false;
 
 	bool shadowRender = false;
 	bool shadowsEnabled = true;
@@ -64,13 +64,8 @@ public:
 	std::vector<Obj> objs;
 	std::vector<Obj> environs;
 
-	std::vector<Bat> bats;
-	std::vector<Crab> crabs;
-	std::vector<Lizard> lizards;
-	std::vector<Pelican> pelicans;
-
 	Obj sky;     // skybox
-	float skyplane = 1.0f;
+	float skyPlane = 1.0f;
 
 	std::vector<Light> lights;
 
@@ -114,30 +109,55 @@ public:
 		getPlayer();
 	}
 
-	void reload(Renderer *renderer)
+	void clear(Renderer *renderer)
 	{
-		sys.finish();
+		for (auto &o : objs)
+			o.destroyObject();
+
+		for (auto &e : environs)
+			e.destroyObject();
 
 		clearVector(&objs);
 		clearVector(&environs);
 
-		//for (int i = 0; i < textures.size(); ++i)
-		//        textures[i].deleteTexture();
+		for (int i = 0; i < textures.size(); ++i)
+			textures[i].deleteTexture();
 
-		//clearVector(&textures);
+		clearVector(&textures);
+
+		sky.destroyObject();
 
 		clearLights(renderer);
+	}
+
+	void reload(Renderer *renderer)
+	{
+		sys.finish();
+
+		clear(renderer);
 
 		mapParser();
 
-		//thisPlayer->restartPlayer();
-
 		addPhysObjects();
-
 		baked = false;
 	}
 
-	float newobjmass = 0.0f;
+	int loadTextures(std::string t)
+	{
+		int fi = -1;
+		for (int ti = 0; ti < textures.size() && fi < 0; ++ti) {
+			if (textures[ti].path == t) {
+				fi = ti;
+			}
+		}
+		if (fi < 0) {
+			textures.resize(textures.size() + 1);
+			fi = textures.size() - 1;
+			textures[fi].loadTexture(t);
+		}
+
+		return fi;
+	}
 
 	void addObj(std::string s, std::string p, std::string t, glm::vec3 pos,
 				glm::vec3 rot, glm::vec3 scale, bool st, bool ph)
@@ -150,19 +170,8 @@ public:
 			objs[i].loadMesh(s, p);
 
 			// check if texture is already loaded
-			int fi = -1;
-			for (int ti = 0; ti < textures.size() && fi < 0; ++ti) {
-				if (textures[ti].path == t) {
-					fi = ti;
-				}
-			}
-			if (fi < 0) {
-				textures.resize(textures.size() + 1);
-				fi = textures.size() - 1;
-				textures[fi].loadTexture(t.c_str());
-			}
+			int fi = loadTextures(t);
 			objs[i].tex = textures[fi];
-
 
 			objs[i].phys.pos = glm::vec3(pos.x, pos.y, pos.z);
 			objs[i].phys.rot = rot;
@@ -178,13 +187,6 @@ public:
 			objs[i].update();
 			objs[i].physMesh.triangleSizeCheck();
 
-			if (newobjmass > 0.0f)
-				objs[i].phys.m = newobjmass;
-			else {
-				objs[i].phys.m = pow(fabs(objs[i].physMesh.bsRadius), 2) * 0.75f * M_PI + 1.0f;
-			}
-			objs[i].phys.I = objs[i].phys.m * objs[i].physMesh.bsRadius * objs[i].physMesh.bsRadius * 0.3f;
-
 			if (objs[i].mesh.indexData.size() > BATCH_SIZE * 0.1f)
 				objs[i].ro = true;
 		} else {
@@ -194,17 +196,7 @@ public:
 			i = environs.size() - 1;
 			environs[i].loadMesh(s); // true -> false ???
 
-			int fi = -1;
-			for (int ti = 0; ti < textures.size() && fi < 0; ++ti) {
-				if (textures[ti].path == t) {
-					fi = ti;
-				}
-			}
-			if (fi < 0) {
-				textures.resize(textures.size() + 1);
-				fi = textures.size() - 1;
-				textures[fi].loadTexture(t.c_str());
-			}
+			int fi = loadTextures(t);
 			environs[i].tex = textures[fi];
 
 			environs[i].phys.pos = glm::vec3(pos.x, pos.y, pos.z);
@@ -298,15 +290,9 @@ public:
 		addPhysObjects();
 
 		baked = false;
-
-		clearVector(&crabs);
-		crabs.push_back(Crab());
-		crabs.back().load();
 	}
 
-// are shadows 420
 	bool baked = false;
-
 	void bakeShadows();
 
 	void restart()

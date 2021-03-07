@@ -54,9 +54,9 @@ void Game::gameRender()
 	renderer.flushBatch();
 
 	// copy text buffer to screen
-	screen.text_buffer.resize(text_buffer.size());
-	for (int i = 0; i < text_buffer.size(); ++i) {
-		screen.text_buffer[i] = text_buffer[i];
+	screen.text_buffer.resize(textBuffer.size());
+	for (int i = 0; i < textBuffer.size(); ++i) {
+		screen.text_buffer[i] = textBuffer[i];
 	}
 
 	if (startScreen) {
@@ -73,5 +73,5 @@ void Game::gameRender()
 	renderer.batchesPerCycle += screen.guiRenderer.batchnum;
 	renderer.drawsPerCycle += screen.guiRenderer.drawnum;
 
-	renderer.max_lights = map.lightNum;
+	renderer.lightNum = map.lightNum;
 }

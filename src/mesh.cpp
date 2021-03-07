@@ -153,11 +153,6 @@ bool Mesh::intersects(Mesh *another)
 		another->collisionNormal = normalize(another->collisionNormal);
 	}
 
-	if (returns) {
-		isIntersecting = true;
-		another->isIntersecting = true;
-	}
-
 	// NULL checks
 	if (!nnv(collisionNormal)) {
 		collisionNormal = glm::vec3(0.0f);
@@ -233,11 +228,6 @@ bool Mesh::sphereIsect(Mesh *another, glm::vec3 s, float r)
 
 		collisionNormal = normalize(collisionNormal);
 		another->collisionNormal = normalize(another->collisionNormal);
-	}
-
-	if (returns) {
-		isIntersecting = true;
-		another->isIntersecting = true;
 	}
 
 	// NULL checks

@@ -8,7 +8,7 @@
 
 Game::Game()
 {
-	text_buffer.resize(15);
+	textBuffer.resize(15, "");
 }
 
 void Game::main()
@@ -17,20 +17,20 @@ void Game::main()
 	auto fps_time = getTime();
 
 	while (running) {
-		++frame_ticks;
+		++frameTicks;
 
 		if (getTime() - fps_time >= 1000) {
 			fps_time = getTime();
-			fps = frame_ticks;
+			fps = frameTicks;
 
 			std::string fpsString = "FPS: " + toString(fps) + ", rt: "
-									+ toString((renderTime) / (float) frame_ticks) + " ms, draws: " +
+									+ toString((renderTime) / (float) frameTicks) + " ms, draws: " +
 									toString(renderer.drawsPerCycle) + ", batches: " +
 									toString(renderer.batchesPerCycle) + ", tt: " +
-									toString((tickTime) / (float) game_ticks) +
+									toString((tickTime) / (float) gameTicks) +
 									" ms";
 			print(fpsString + "\n");
-			print("lights: " + toString(renderer.max_lights) + "\n");
+			print("lights: " + toString(renderer.lightNum) + "\n");
 
 			print("Player pos: " + toString(thisPlayer->phys.pos.x) + ", " + toString(thisPlayer->phys.pos.y) +
 				  ", " + toString(thisPlayer->phys.pos.z) + "\n");
@@ -38,8 +38,8 @@ void Game::main()
 			renderTime = 0;
 			tickTime = 0;
 
-			frame_ticks = 0;
-			game_ticks = 0;
+			frameTicks = 0;
+			gameTicks = 0;
 		}
 
 		auto renderTimeStart = getTime();
@@ -70,7 +70,7 @@ void Game::main()
 int Game::getTime()
 {
 	long long int et = std::chrono::duration_cast<std::chrono::milliseconds>
-			(timer.now().time_since_epoch() - start_time).count();
+			(timer.now().time_since_epoch() - startTime).count();
 
 	int returns = (int) et;
 
@@ -92,8 +92,8 @@ void Game::init()
 
 	loadGameCfg();
 
-	if (fileoutput) {
-		outputfile = freopen("output.log", "current_w", stdout);
+	if (fileOutput) {
+		outputFile = freopen("output.log", "current_w", stdout);
 	}
 
 	print("===========================================================================\n");
@@ -130,13 +130,13 @@ void Game::init()
 
 	audio.loadAudio();
 
-	if (startFullScr)
+	if (startFullscreen)
 		fullScr();
 }
 
 void Game::start()
 {
-	start_time = timer.now().time_since_epoch();
+	startTime = timer.now().time_since_epoch();
 
 	running = true;
 
@@ -175,10 +175,10 @@ void Game::print(std::string s)
 {
 	printf(&s[0]);
 
-	for (int i = text_buffer.size() - 1; i > 0; --i)
-		text_buffer[i] = text_buffer[i - 1];
+	for (int i = textBuffer.size() - 1; i > 0; --i)
+		textBuffer[i] = textBuffer[i - 1];
 
-	text_buffer[0] = s;
+	textBuffer[0] = s;
 }
 
 void Game::loadGameCfg()
@@ -204,7 +204,7 @@ void Game::gameQuit()
 
 	glfwTerminate();
 
-	if (fileoutput) {
-		fclose(outputfile);
+	if (fileOutput) {
+		fclose(outputFile);
 	}
 }
