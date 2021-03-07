@@ -84,7 +84,6 @@ void Renderer::init()
 	if (fboStatus != GL_FRAMEBUFFER_COMPLETE)
 		gamePrint("Framebuffer not complete: " + toString(fboStatus) + "\n");
 
-
 	gamePrint("FBO id: " + toString(screenFBO) + "\n");
 }
 
@@ -188,13 +187,12 @@ void Renderer::flushUpdate()
 	glUniform1f(glGetUniformLocation(mainShader.program, "farPlane"), farPlane);
 
 	GLuint sampleTex = glGetUniformLocation(mainShader.program, "diffuseTexture");
+	glUniform1i(sampleTex, 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture.tex);
-	glUniform1i(sampleTex, 0);
 
 	glUniform3fv(glGetUniformLocation(mainShader.program, "fogCol"), 1, &(clearCol)[0]);
 	glUniform2fv(glGetUniformLocation(mainShader.program, "al"), 1, &(glm::vec2(this->amb, this->lit))[0]);
-
 
 	for (int l = 0; l < lightNum; ++l) {
 		glUniform3fv(glGetUniformLocation(mainShader.program, ("lights[" + toString(l) + "].pos").c_str()), 1,
@@ -204,9 +202,9 @@ void Renderer::flushUpdate()
 
 		GLuint depthTex = glGetUniformLocation(mainShader.program, ("lights[" + toString(l) + "].depthMap").c_str());
 
+		glUniform1i(depthTex, 1 + l);
 		glActiveTexture((GLenum) (GL_TEXTURE1 + l));
 		glBindTexture(GL_TEXTURE_CUBE_MAP, lights[l].depthCubemap);
-		glUniform1i(depthTex, 1 + l);
 	}
 
 	glUniform1i(glGetUniformLocation(mainShader.program, "lightNum"), lightNum);
@@ -650,14 +648,18 @@ void Renderer::renderFBO()
 
 	glUseProgram(screenShader.program);
 
-	GLuint sampleTex = glGetUniformLocation(screenShader.program, "texture");
+	GLuint stu = glGetUniformLocation(screenShader.program, "screenTex");
+	GLuint dtu = glGetUniformLocation(screenShader.program, "ditherTex");
 
-	glUniform1i(sampleTex, 0);
+	glUniform1i(stu, 0);
 	glActiveTexture(GL_TEXTURE0);
-
 	glBindTexture(GL_TEXTURE_2D, screenTex);
 
-	glUniform1f(glGetUniformLocation(screenShader.program, "dither"), (float) dithering);
+	glUniform1i(dtu, 1);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, ditherTex.tex);
+
+	glUniform1f(glGetUniformLocation(screenShader.program, "dithering"), (float) dithering);
 	glUniform2fv(glGetUniformLocation(screenShader.program, "ratio"), 1, &(glm::vec2((float) SCREEN_WIDTH / (float) w, (float) SCREEN_HEIGHT / (float) h))[0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, quadBuf);
@@ -680,7 +682,7 @@ void Renderer::renderFBO()
 			0,
 			nullptr
 	);
-	glBindAttribLocation(screenShader.program, 1, "texture");
+	glBindAttribLocation(screenShader.program, 1, "tex");
 	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
 	glVertexAttribPointer(

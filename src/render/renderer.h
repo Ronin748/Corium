@@ -97,6 +97,7 @@ public:
 	int vertices = 0;
 
 	Texture texture;
+	Texture ditherTex;
 
 	GLuint SCREEN_WIDTH = 512, SCREEN_HEIGHT = 300;
 

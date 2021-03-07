@@ -125,6 +125,7 @@ void Game::init()
 	audio.initAudio();
 
 	renderer.init();
+	renderer.ditherTex.loadTexture("gfx/dither.png");
 
 	screen.loadScreen();
 
