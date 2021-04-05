@@ -1,6 +1,11 @@
+.idea
+.tags
 doc
 CMakeFiles
 CMakeCache.txt
 lib/win
 lib/linux
 lib/include
+Makefile
+cmake_install.cmake
+
